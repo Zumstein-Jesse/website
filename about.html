@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me | Jesse Zumstein</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+        }
+
+        nav a {
+            color: #a8b2d1;
+            text-decoration: none;
+            font-size: 1.05em;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #64ffda;
+        }
+
+        .hero-section {
+            padding: 150px 20px 80px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #heroCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            cursor: default;
+        }
+
+        h1::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle 150px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 255, 255, 0.8) 0%,
+                rgba(102, 126, 234, 0.6) 30%,
+                transparent 70%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        h1:hover::before {
+            opacity: 1;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #64ffda;
+            margin-bottom: 30px;
+        }
+
+        .about-content {
+            max-width: 1100px;
+            margin: 80px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        #aboutCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        #valuesCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 80px;
+        }
+
+        .about-text h2 {
+            font-size: 2.2em;
+            color: #ccd6f6;
+            margin-bottom: 25px;
+        }
+
+        .about-text p {
+            color: #a8b2d1;
+            font-size: 1.1em;
+            line-height: 1.9;
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            color: #64ffda;
+            font-weight: 600;
+        }
+
+        .profile-visual {
+            background: linear-gradient(135deg, #1e1e3f 0%, #1a1a2e 100%);
+            border-radius: 20px;
+            padding: 40px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: rgba(26, 26, 46, 0.5);
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .stat-label {
+            color: #8892b0;
+            font-size: 1em;
+        }
+
+        .stat-value {
+            color: #64ffda;
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+
+        .journey-section {
+            background: #0f0f1e;
+            padding: 80px 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .journey-content {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .journey-content h2 {
+            font-size: 2.5em;
+            color: #ccd6f6;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .journey-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 35px;
+        }
+
+        .journey-card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #1e1e3f 100%);
+            padding: 35px;
+            border-radius: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .journey-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.3);
+        }
+
+        .journey-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .journey-card h3 {
+            color: #64ffda;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .journey-card p {
+            color: #a8b2d1;
+            line-height: 1.8;
+        }
+
+        .values-section {
+            padding: 80px 20px;
+            background: #0a0a0a;
+            position: relative;
+            z-index: 1;
+        }
+
+        .values-content {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .values-content h2 {
+            font-size: 2.5em;
+            color: #ccd6f6;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .values-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .value-item {
+            background: linear-gradient(135deg, #1e1e3f 0%, #1a1a2e 100%);
+            padding: 35px;
+            border-radius: 20px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            gap: 25px;
+            align-items: flex-start;
+        }
+
+        .value-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .value-content h3 {
+            color: #64ffda;
+            font-size: 1.6em;
+            margin-bottom: 12px;
+        }
+
+        .value-content p {
+            color: #a8b2d1;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        footer {
+            background: #1a1a2e;
+            padding: 40px 20px;
+            text-align: center;
+            color: #8892b0;
+            border-top: 1px solid rgba(102, 126, 234, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav ul {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">JZ</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <canvas id="heroCanvas"></canvas>
+        <div class="hero-content">
+            <h1 id="mainTitle" data-text="About Me">About Me</h1>
+            <p class="subtitle">Creative Technologist bridging art and engineering</p>
+        </div>
+    </section>
+
+    <div style="position: relative;">
+        <canvas id="aboutCanvas"></canvas>
+
+        <section class="about-content">
+        <div class="about-grid">
+            <div class="about-text">
+                <h2>Hey there! 👋</h2>
+                <p>I'm Jesse Zumstein, a <span class="highlight">Creative Technologist</span> who lives at the intersection of art and programming. I've spent my career building tools, creating characters, and shipping games that millions of people have played.</p>
+                <p>From working on <span class="highlight">Unreal Engine 5</span> at Epic Games to developing pipelines for AAA titles like <span class="highlight">Fortnite</span> and <span class="highlight">Hogwarts Legacy</span>, I've learned that the best work happens when creativity meets technical excellence.</p>
+                <p>Currently, I'm exploring the bleeding edge of <span class="highlight">AR/VR at Meta</span>, building immersive worlds that push the boundaries of what's possible in real-time graphics and interactive storytelling.</p>
+            </div>
+
+            <div class="profile-visual">
+                <div class="stat-item">
+                    <span class="stat-label">Years of Experience</span>
+                    <span class="stat-value">7+</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">AAA Projects Shipped</span>
+                    <span class="stat-value">10+</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Players Reached</span>
+                    <span class="stat-value">10M+</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Tools Built</span>
+                    <span class="stat-value">50+</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="journey-section">
+        <div class="journey-content">
+            <h2>My Journey</h2>
+            <div class="journey-grid">
+                <div class="journey-card">
+                    <div class="journey-icon">🎨</div>
+                    <h3>The Beginning</h3>
+                    <p>Spent 8 years mastering traditional media (charcoal and oil painting) while nurturing a deep passion for video games. The intersection of fine art and interactive experiences became my calling, setting the foundation for a career that bridges creative expression with cutting-edge technology.</p>
+                </div>
+
+                <div class="journey-card">
+                    <div class="journey-icon">🎓</div>
+                    <h3>Education</h3>
+                    <p>Earned a BFA in Animation from Savannah College of Art & Design, where technical skill met artistic vision. Now pursuing an MEd in Education Policy and Leadership, driven by a commitment to lifelong learning and shaping the future of creative education.</p>
+                </div>
+
+                <div class="journey-card">
+                    <div class="journey-icon">🚀</div>
+                    <h3>Breaking Into AAA</h3>
+                    <p>Joined Epic Games to ensure build health for Unreal Engine 5, executing thousands of test cases while collaborating directly with core engine developers. This experience provided invaluable insights into large-scale software development and the rigorous standards of AAA production.</p>
+                </div>
+
+                <div class="journey-card">
+                    <div class="journey-icon">🎮</div>
+                    <h3>Shipping Hits</h3>
+                    <p>Contributed to blockbuster titles including Hogwarts Legacy, Mortal Kombat, Fortnite, and Lego 2K Drive. Mastered the art of pipeline development and technical animation at scale with Frame Machine, delivering tools and systems that empowered teams of 50+ artists and developers.</p>
+                </div>
+
+                <div class="journey-card">
+                    <div class="journey-icon">🥽</div>
+                    <h3>Current Status</h3>
+                    <p>Creating next-generation AR/VR experiences at Meta, exploring the convergence of AI and immersive technology. Simultaneously serving as co-lead on the Live Mas Scholar Alumni Council and interning in the non-profit sector, committed to leveraging technology for social impact.</p>
+                </div>
+
+                <div class="journey-card">
+                    <div class="journey-icon">✨</div>
+                    <h3>The Future</h3>
+                    <p>Focused on continuous evolution as an artist, developer, and educator in the transformative AI era. Seeking opportunities to push creative and technical boundaries while mentoring the next generation of technologists who will shape tomorrow's interactive experiences.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="values-section">
+        <canvas id="valuesCanvas"></canvas>
+        <div class="values-content">
+            <h2>What Drives Me</h2>
+            <div class="values-list">
+                <div class="value-item">
+                    <div class="value-number">1</div>
+                    <div class="value-content">
+                        <h3>Craft Meets Code</h3>
+                        <p>I believe the best experiences happen when artistic vision and technical excellence work in harmony. Whether it's a character rig, a pipeline tool, or a shader, everything should be both beautiful and efficient.</p>
+                    </div>
+                </div>
+
+                <div class="value-item">
+                    <div class="value-number">2</div>
+                    <div class="value-content">
+                        <h3>Empowering Teams</h3>
+                        <p>Building tools that make artists and developers more productive is incredibly rewarding. Good pipeline development isn't just about automation, but also about understanding workflows and removing friction.</p>
+                    </div>
+                </div>
+
+                <div class="value-item">
+                    <div class="value-number">3</div>
+                    <div class="value-content">
+                        <h3>Continuous Learning</h3>
+                        <p>The tech and game industry moves fast. I'm constantly exploring new tools, techniques, and technologies. From machine learning to real-time rendering, there's always something new to master.</p>
+                    </div>
+                </div>
+
+                <div class="value-item">
+                    <div class="value-number">4</div>
+                    <div class="value-content">
+                        <h3>Impact Through Innovation</h3>
+                        <p>Whether it's teaching kids to code, building nonprofit tech solutions, or creating experiences played by millions, I'm driven by work that makes a meaningful difference.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Jesse Zumstein. All rights reserved.</p>
+    </footer>
+    </div>
+
+    <script>
+        // Interactive Title Effect
+        const mainTitle = document.getElementById('mainTitle');
+        
+        mainTitle.addEventListener('mousemove', (e) => {
+            const rect = mainTitle.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            mainTitle.style.setProperty('--mouse-x', `${x}%`);
+            mainTitle.style.setProperty('--mouse-y', `${y}%`);
+        });
+
+        // Hero Particle Canvas Animation
+        const heroCanvas = document.getElementById('heroCanvas');
+        const heroCtx = heroCanvas.getContext('2d');
+        
+        heroCanvas.width = heroCanvas.offsetWidth;
+        heroCanvas.height = heroCanvas.offsetHeight;
+
+        let heroMouse = {
+            x: heroCanvas.width / 2,
+            y: heroCanvas.height / 2
+        };
+
+        class HeroParticle {
+            constructor() {
+                this.x = Math.random() * heroCanvas.width;
+                this.y = Math.random() * heroCanvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1;
+                this.distance = 0;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+            }
+
+            draw() {
+                heroCtx.fillStyle = `rgba(102, 126, 234, ${1 - this.distance / 200})`;
+                heroCtx.beginPath();
+                heroCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                heroCtx.closePath();
+                heroCtx.fill();
+            }
+
+            update() {
+                let dx = heroMouse.x - this.x;
+                let dy = heroMouse.y - this.y;
+                this.distance = Math.sqrt(dx * dx + dy * dy);
+                let forceDirectionX = dx / this.distance;
+                let forceDirectionY = dy / this.distance;
+                let maxDistance = 150;
+                let force = (maxDistance - this.distance) / maxDistance;
+                let directionX = forceDirectionX * force * this.density;
+                let directionY = forceDirectionY * force * this.density;
+
+                if (this.distance < maxDistance) {
+                    this.x -= directionX;
+                    this.y -= directionY;
+                } else {
+                    if (this.x !== this.baseX) {
+                        let dx = this.x - this.baseX;
+                        this.x -= dx / 10;
+                    }
+                    if (this.y !== this.baseY) {
+                        let dy = this.y - this.baseY;
+                        this.y -= dy / 10;
+                    }
+                }
+
+                this.baseX += this.vx;
+                this.baseY += this.vy;
+
+                if (this.baseX < 0 || this.baseX > heroCanvas.width) {
+                    this.vx = -this.vx;
+                    this.baseX = Math.max(0, Math.min(heroCanvas.width, this.baseX));
+                }
+                if (this.baseY < 0 || this.baseY > heroCanvas.height) {
+                    this.vy = -this.vy;
+                    this.baseY = Math.max(0, Math.min(heroCanvas.height, this.baseY));
+                }
+            }
+        }
+
+        let heroParticlesArray = [];
+        const numberOfHeroParticles = 100;
+
+        function initHero() {
+            heroParticlesArray = [];
+            for (let i = 0; i < numberOfHeroParticles; i++) {
+                heroParticlesArray.push(new HeroParticle());
+            }
+        }
+
+        function connectHeroParticles() {
+            for (let a = 0; a < heroParticlesArray.length; a++) {
+                for (let b = a; b < heroParticlesArray.length; b++) {
+                    let dx = heroParticlesArray[a].x - heroParticlesArray[b].x;
+                    let dy = heroParticlesArray[a].y - heroParticlesArray[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 100) {
+                        heroCtx.strokeStyle = `rgba(102, 126, 234, ${1 - distance / 100})`;
+                        heroCtx.lineWidth = 0.5;
+                        heroCtx.beginPath();
+                        heroCtx.moveTo(heroParticlesArray[a].x, heroParticlesArray[a].y);
+                        heroCtx.lineTo(heroParticlesArray[b].x, heroParticlesArray[b].y);
+                        heroCtx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateHero() {
+            heroCtx.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
+
+            for (let i = 0; i < heroParticlesArray.length; i++) {
+                heroParticlesArray[i].update();
+                heroParticlesArray[i].draw();
+            }
+            connectHeroParticles();
+            requestAnimationFrame(animateHero);
+        }
+
+        initHero();
+        animateHero();
+
+        heroCanvas.addEventListener('mousemove', (e) => {
+            const rect = heroCanvas.getBoundingClientRect();
+            heroMouse.x = e.clientX - rect.left;
+            heroMouse.y = e.clientY - rect.top;
+        });
+
+        // Grid Canvas Background for Content Sections
+        const aboutCanvas = document.getElementById('aboutCanvas');
+        const aboutCtx = aboutCanvas.getContext('2d');
+        const canvasWrapper = aboutCanvas.parentElement;
+        
+        function updateCanvasSize() {
+            aboutCanvas.width = window.innerWidth;
+            // Get the actual height of the wrapper div containing all content sections
+            aboutCanvas.height = canvasWrapper.offsetHeight;
+        }
+        
+        updateCanvasSize();
+
+        let gridMouse = { x: 0, y: 0 };
+        
+        document.addEventListener('mousemove', (e) => {
+            const wrapperRect = canvasWrapper.getBoundingClientRect();
+            gridMouse.x = e.clientX;
+            gridMouse.y = e.clientY - wrapperRect.top;
+        });
+
+        class GridNode {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.baseSize = 2;
+                this.size = this.baseSize;
+                this.maxSize = 8;
+            }
+
+            draw() {
+                const dx = gridMouse.x - this.x;
+                const dy = gridMouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const maxDistance = 200;
+
+                if (distance < maxDistance) {
+                    this.size = this.baseSize + (1 - distance / maxDistance) * this.maxSize;
+                    const opacity = 1 - distance / maxDistance;
+                    aboutCtx.fillStyle = `rgba(102, 126, 234, ${opacity * 0.8})`;
+                    aboutCtx.shadowBlur = 15;
+                    aboutCtx.shadowColor = 'rgba(102, 126, 234, 0.5)';
+                } else {
+                    this.size = this.baseSize;
+                    aboutCtx.fillStyle = 'rgba(102, 126, 234, 0.3)';
+                    aboutCtx.shadowBlur = 0;
+                }
+
+                aboutCtx.beginPath();
+                aboutCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                aboutCtx.fill();
+            }
+        }
+
+        const gridSpacing = 80;
+        let gridNodes = [];
+        
+        function initGrid() {
+            gridNodes = [];
+            for (let x = gridSpacing; x < aboutCanvas.width; x += gridSpacing) {
+                for (let y = gridSpacing; y < aboutCanvas.height; y += gridSpacing) {
+                    gridNodes.push(new GridNode(x, y));
+                }
+            }
+        }
+        
+        // Initialize after a short delay to ensure page is loaded
+        setTimeout(() => {
+            updateCanvasSize();
+            initGrid();
+        }, 100);
+
+        function animateGrid() {
+            aboutCtx.clearRect(0, 0, aboutCanvas.width, aboutCanvas.height);
+
+            // Draw grid lines
+            aboutCtx.strokeStyle = 'rgba(102, 126, 234, 0.1)';
+            aboutCtx.lineWidth = 1;
+            
+            for (let x = gridSpacing; x < aboutCanvas.width; x += gridSpacing) {
+                aboutCtx.beginPath();
+                aboutCtx.moveTo(x, 0);
+                aboutCtx.lineTo(x, aboutCanvas.height);
+                aboutCtx.stroke();
+            }
+            
+            for (let y = gridSpacing; y < aboutCanvas.height; y += gridSpacing) {
+                aboutCtx.beginPath();
+                aboutCtx.moveTo(0, y);
+                aboutCtx.lineTo(aboutCanvas.width, y);
+                aboutCtx.stroke();
+            }
+
+            // Draw nodes
+            gridNodes.forEach(node => node.draw());
+
+            requestAnimationFrame(animateGrid);
+        }
+
+        animateGrid();
+
+        // Values Canvas Background
+        const valuesCanvas = document.getElementById('valuesCanvas');
+        const valuesCtx = valuesCanvas.getContext('2d');
+        const valuesSection = valuesCanvas.parentElement;
+        
+        function updateValuesCanvasSize() {
+            valuesCanvas.width = window.innerWidth;
+            valuesCanvas.height = valuesSection.offsetHeight;
+        }
+        
+        updateValuesCanvasSize();
+
+        let valuesMouse = { x: 0, y: 0 };
+        
+        valuesSection.addEventListener('mousemove', (e) => {
+            const wrapperRect = valuesSection.getBoundingClientRect();
+            valuesMouse.x = e.clientX;
+            valuesMouse.y = e.clientY - wrapperRect.top;
+        });
+
+        class ValuesGridNode {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.baseSize = 2;
+                this.size = this.baseSize;
+                this.maxSize = 8;
+            }
+
+            draw() {
+                const dx = valuesMouse.x - this.x;
+                const dy = valuesMouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const maxDistance = 200;
+
+                if (distance < maxDistance) {
+                    this.size = this.baseSize + (1 - distance / maxDistance) * this.maxSize;
+                    const opacity = 1 - distance / maxDistance;
+                    valuesCtx.fillStyle = `rgba(102, 126, 234, ${opacity * 0.8})`;
+                    valuesCtx.shadowBlur = 15;
+                    valuesCtx.shadowColor = 'rgba(102, 126, 234, 0.5)';
+                } else {
+                    this.size = this.baseSize;
+                    valuesCtx.fillStyle = 'rgba(102, 126, 234, 0.3)';
+                    valuesCtx.shadowBlur = 0;
+                }
+
+                valuesCtx.beginPath();
+                valuesCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                valuesCtx.fill();
+            }
+        }
+
+        const valuesGridSpacing = 80;
+        let valuesGridNodes = [];
+        
+        function initValuesGrid() {
+            valuesGridNodes = [];
+            for (let x = valuesGridSpacing; x < valuesCanvas.width; x += valuesGridSpacing) {
+                for (let y = valuesGridSpacing; y < valuesCanvas.height; y += valuesGridSpacing) {
+                    valuesGridNodes.push(new ValuesGridNode(x, y));
+                }
+            }
+        }
+        
+        setTimeout(() => {
+            updateValuesCanvasSize();
+            initValuesGrid();
+        }, 100);
+
+        function animateValuesGrid() {
+            valuesCtx.clearRect(0, 0, valuesCanvas.width, valuesCanvas.height);
+
+            // Draw grid lines
+            valuesCtx.strokeStyle = 'rgba(102, 126, 234, 0.1)';
+            valuesCtx.lineWidth = 1;
+            
+            for (let x = valuesGridSpacing; x < valuesCanvas.width; x += valuesGridSpacing) {
+                valuesCtx.beginPath();
+                valuesCtx.moveTo(x, 0);
+                valuesCtx.lineTo(x, valuesCanvas.height);
+                valuesCtx.stroke();
+            }
+            
+            for (let y = valuesGridSpacing; y < valuesCanvas.height; y += valuesGridSpacing) {
+                valuesCtx.beginPath();
+                valuesCtx.moveTo(0, y);
+                valuesCtx.lineTo(valuesCanvas.width, y);
+                valuesCtx.stroke();
+            }
+
+            // Draw nodes
+            valuesGridNodes.forEach(node => node.draw());
+
+            requestAnimationFrame(animateValuesGrid);
+        }
+
+        animateValuesGrid();
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            heroCanvas.width = heroCanvas.offsetWidth;
+            heroCanvas.height = heroCanvas.offsetHeight;
+            initHero();
+
+            updateCanvasSize();
+            initGrid();
+            
+            updateValuesCanvasSize();
+            initValuesGrid();
+        });
+        
+        // Also reinitialize on window load to ensure proper sizing
+        window.addEventListener('load', () => {
+            updateCanvasSize();
+            initGrid();
+            
+            updateValuesCanvasSize();
+            initValuesGrid();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Jesse Zumstein</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+        }
+
+        nav a {
+            color: #a8b2d1;
+            text-decoration: none;
+            font-size: 1.05em;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #64ffda;
+        }
+
+        .hero-section {
+            padding: 150px 20px 80px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #heroCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .hero-content {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            cursor: default;
+        }
+
+        h1::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle 150px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 255, 255, 0.8) 0%,
+                rgba(102, 126, 234, 0.6) 30%,
+                transparent 70%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        h1:hover::before {
+            opacity: 1;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #a8b2d1;
+            margin-bottom: 30px;
+        }
+
+        #contactCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .contact-content {
+            max-width: 1100px;
+            margin: 80px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+
+        .contact-info h2 {
+            font-size: 2.2em;
+            color: #ccd6f6;
+            margin-bottom: 10px;
+        }
+
+        .contact-info p {
+            color: #a8b2d1;
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        .contact-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .contact-method {
+            background: linear-gradient(135deg, #1e1e3f 0%, #1a1a2e 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .contact-method:hover {
+            transform: translateX(10px);
+            border-color: rgba(100, 255, 218, 0.5);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(102, 126, 234, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            flex-shrink: 0;
+        }
+
+        .contact-method-info h3 {
+            color: #64ffda;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .contact-method-info p {
+            color: #8892b0;
+            font-size: 0.95em;
+            margin: 0;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #1e1e3f 0%, #1a1a2e 100%);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-btn:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .contact-form {
+            background: linear-gradient(135deg, #1e1e3f 0%, #1a1a2e 100%);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .contact-form h2 {
+            font-size: 2em;
+            color: #ccd6f6;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #a8b2d1;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            background: rgba(26, 26, 46, 0.5);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 1em;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #64ffda;
+            background: rgba(26, 26, 46, 0.8);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .availability-section {
+            background: #0f0f1e;
+            padding: 60px 20px;
+            margin-top: 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .availability-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .availability-content h2 {
+            font-size: 2.5em;
+            color: #ccd6f6;
+            margin-bottom: 20px;
+        }
+
+        .availability-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, #1e1e3f 0%, #1a1a2e 100%);
+            padding: 15px 30px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 100, 100, 0.3);
+            margin: 20px 0;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #ff1e00;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                box-shadow: 0 0 0 0 rgba(255, 100, 100, 0.849);
+            }
+            50% {
+                opacity: 0.7;
+                box-shadow: 0 0 0 10px rgba(100, 255, 218, 0);
+            }
+        }
+
+        .status-text {
+            color: #ff7664;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .availability-content p {
+            color: #a8b2d1;
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-top: 20px;
+        }
+
+        footer {
+            background: #1a1a2e;
+            padding: 40px 20px;
+            text-align: center;
+            color: #8892b0;
+            border-top: 1px solid rgba(102, 126, 234, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav ul {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">JZ</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <canvas id="heroCanvas"></canvas>
+        <div class="hero-content">
+            <h1 id="mainTitle" data-text="Let's Connect">Let's Connect</h1>
+            <p class="subtitle">Have a project in mind? Looking to collaborate? Let's talk.</p>
+        </div>
+    </section>
+
+    <div style="position: relative;">
+        <canvas id="contactCanvas"></canvas>
+
+        <section class="contact-content">
+        <div class="contact-grid">
+            <div class="contact-info">
+                <div>
+                    <h2>Get In Touch</h2>
+                    <p>I'm always interested in hearing about new projects, opportunities, and collaborations. Whether you need pipeline tools, technical animation, or AR/VR development, I'd love to hear from you.</p>
+                </div>
+
+                <div class="contact-methods">
+                    <a href="mailto:jesse@example.com" class="contact-method">
+                        <div class="contact-icon">📧</div>
+                        <div class="contact-method-info">
+                            <h3>Email</h3>
+                            <p>jesse@example.com</p>
+                        </div>
+                    </a>
+
+                    <a href="https://linkedin.com" target="_blank" class="contact-method">
+                        <div class="contact-icon">💼</div>
+                        <div class="contact-method-info">
+                            <h3>LinkedIn</h3>
+                            <p>Connect professionally</p>
+                        </div>
+                    </a>
+
+                    <div class="contact-method">
+                        <div class="contact-icon">📍</div>
+                        <div class="contact-method-info">
+                            <h3>Location</h3>
+                            <p>Chicago, Illinois</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 style="color: #ccd6f6; margin-bottom: 15px;">Find Me Online</h3>
+                    <div class="social-links">
+                        <a href="https://github.com" target="_blank" class="social-btn" title="GitHub">🐙</a>
+                        <a href="https://twitter.com" target="_blank" class="social-btn" title="Twitter">🐦</a>
+                        <a href="https://linkedin.com" target="_blank" class="social-btn" title="LinkedIn">💼</a>
+                        <a href="https://artstation.com" target="_blank" class="social-btn" title="ArtStation">🎨</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-form">
+                <h2>Send a Message</h2>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required placeholder="Your name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <select id="subject" name="subject" required>
+                            <option value="">Select a topic</option>
+                            <option value="project">Project Inquiry</option>
+                            <option value="collaboration">Collaboration</option>
+                            <option value="hiring">Hiring/Contract Work</option>
+                            <option value="consulting">Technical Consulting</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" required placeholder="Tell me about your project or inquiry..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="availability-section">
+        <div class="availability-content">
+            <h2>Current Availability</h2>
+            <div class="availability-status">
+                <div class="status-dot"></div>
+                <span class="status-text">Under Contract Until 3/31/2026</span>
+            </div>
+            <p>Following my contract, I'm available for freelance projects, contract work, and full-time opportunities. I'm especially interested in projects involving AR/VR, real-time graphics, pipeline development, and technical animation.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Jesse Zumstein. All rights reserved.</p>
+    </footer>
+    </div>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // In a real implementation, this would send to a backend
+            alert(`Thank you ${name}! Your message has been received. I'll get back to you soon at ${email}.`);
+            
+            // Reset form
+            this.reset();
+        });
+
+        // Interactive Title Effect
+        const mainTitle = document.getElementById('mainTitle');
+        
+        mainTitle.addEventListener('mousemove', (e) => {
+            const rect = mainTitle.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            mainTitle.style.setProperty('--mouse-x', `${x}%`);
+            mainTitle.style.setProperty('--mouse-y', `${y}%`);
+        });
+
+        // Hero Particle Canvas Animation
+        const heroCanvas = document.getElementById('heroCanvas');
+        const heroCtx = heroCanvas.getContext('2d');
+        
+        heroCanvas.width = heroCanvas.offsetWidth;
+        heroCanvas.height = heroCanvas.offsetHeight;
+
+        let heroMouse = {
+            x: heroCanvas.width / 2,
+            y: heroCanvas.height / 2
+        };
+
+        class HeroParticle {
+            constructor() {
+                this.x = Math.random() * heroCanvas.width;
+                this.y = Math.random() * heroCanvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1;
+                this.distance = 0;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+            }
+
+            draw() {
+                heroCtx.fillStyle = `rgba(102, 126, 234, ${1 - this.distance / 200})`;
+                heroCtx.beginPath();
+                heroCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                heroCtx.closePath();
+                heroCtx.fill();
+            }
+
+            update() {
+                let dx = heroMouse.x - this.x;
+                let dy = heroMouse.y - this.y;
+                this.distance = Math.sqrt(dx * dx + dy * dy);
+                let forceDirectionX = dx / this.distance;
+                let forceDirectionY = dy / this.distance;
+                let maxDistance = 150;
+                let force = (maxDistance - this.distance) / maxDistance;
+                let directionX = forceDirectionX * force * this.density;
+                let directionY = forceDirectionY * force * this.density;
+
+                if (this.distance < maxDistance) {
+                    this.x -= directionX;
+                    this.y -= directionY;
+                } else {
+                    if (this.x !== this.baseX) {
+                        let dx = this.x - this.baseX;
+                        this.x -= dx / 10;
+                    }
+                    if (this.y !== this.baseY) {
+                        let dy = this.y - this.baseY;
+                        this.y -= dy / 10;
+                    }
+                }
+
+                this.baseX += this.vx;
+                this.baseY += this.vy;
+
+                if (this.baseX < 0 || this.baseX > heroCanvas.width) {
+                    this.vx = -this.vx;
+                    this.baseX = Math.max(0, Math.min(heroCanvas.width, this.baseX));
+                }
+                if (this.baseY < 0 || this.baseY > heroCanvas.height) {
+                    this.vy = -this.vy;
+                    this.baseY = Math.max(0, Math.min(heroCanvas.height, this.baseY));
+                }
+            }
+        }
+
+        let heroParticlesArray = [];
+        const numberOfHeroParticles = 100;
+
+        function initHero() {
+            heroParticlesArray = [];
+            for (let i = 0; i < numberOfHeroParticles; i++) {
+                heroParticlesArray.push(new HeroParticle());
+            }
+        }
+
+        function connectHeroParticles() {
+            for (let a = 0; a < heroParticlesArray.length; a++) {
+                for (let b = a; b < heroParticlesArray.length; b++) {
+                    let dx = heroParticlesArray[a].x - heroParticlesArray[b].x;
+                    let dy = heroParticlesArray[a].y - heroParticlesArray[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 100) {
+                        heroCtx.strokeStyle = `rgba(102, 126, 234, ${1 - distance / 100})`;
+                        heroCtx.lineWidth = 0.5;
+                        heroCtx.beginPath();
+                        heroCtx.moveTo(heroParticlesArray[a].x, heroParticlesArray[a].y);
+                        heroCtx.lineTo(heroParticlesArray[b].x, heroParticlesArray[b].y);
+                        heroCtx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateHero() {
+            heroCtx.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
+
+            for (let i = 0; i < heroParticlesArray.length; i++) {
+                heroParticlesArray[i].update();
+                heroParticlesArray[i].draw();
+            }
+            connectHeroParticles();
+            requestAnimationFrame(animateHero);
+        }
+
+        initHero();
+        animateHero();
+
+        heroCanvas.addEventListener('mousemove', (e) => {
+            const rect = heroCanvas.getBoundingClientRect();
+            heroMouse.x = e.clientX - rect.left;
+            heroMouse.y = e.clientY - rect.top;
+        });
+
+        // Grid Canvas Background for Content Sections
+        const contactCanvas = document.getElementById('contactCanvas');
+        const contactCtx = contactCanvas.getContext('2d');
+        const canvasWrapper = contactCanvas.parentElement;
+        
+        function updateCanvasSize() {
+            contactCanvas.width = window.innerWidth;
+            // Get the actual height of the wrapper div containing all content sections
+            contactCanvas.height = canvasWrapper.offsetHeight;
+        }
+        
+        updateCanvasSize();
+
+        let gridMouse = { x: 0, y: 0 };
+        
+        document.addEventListener('mousemove', (e) => {
+            const wrapperRect = canvasWrapper.getBoundingClientRect();
+            gridMouse.x = e.clientX;
+            gridMouse.y = e.clientY - wrapperRect.top;
+        });
+
+        class GridNode {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.baseSize = 2;
+                this.size = this.baseSize;
+                this.maxSize = 8;
+            }
+
+            draw() {
+                const dx = gridMouse.x - this.x;
+                const dy = gridMouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const maxDistance = 200;
+
+                if (distance < maxDistance) {
+                    this.size = this.baseSize + (1 - distance / maxDistance) * this.maxSize;
+                    const opacity = 1 - distance / maxDistance;
+                    contactCtx.fillStyle = `rgba(102, 126, 234, ${opacity * 0.8})`;
+                    contactCtx.shadowBlur = 15;
+                    contactCtx.shadowColor = 'rgba(102, 126, 234, 0.5)';
+                } else {
+                    this.size = this.baseSize;
+                    contactCtx.fillStyle = 'rgba(102, 126, 234, 0.3)';
+                    contactCtx.shadowBlur = 0;
+                }
+
+                contactCtx.beginPath();
+                contactCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                contactCtx.fill();
+            }
+        }
+
+        const gridSpacing = 80;
+        let gridNodes = [];
+        
+        function initGrid() {
+            gridNodes = [];
+            for (let x = gridSpacing; x < contactCanvas.width; x += gridSpacing) {
+                for (let y = gridSpacing; y < contactCanvas.height; y += gridSpacing) {
+                    gridNodes.push(new GridNode(x, y));
+                }
+            }
+        }
+        
+        // Initialize after a short delay to ensure page is loaded
+        setTimeout(() => {
+            updateCanvasSize();
+            initGrid();
+        }, 100);
+
+        function animateGrid() {
+            contactCtx.clearRect(0, 0, contactCanvas.width, contactCanvas.height);
+
+            // Draw grid lines
+            contactCtx.strokeStyle = 'rgba(102, 126, 234, 0.1)';
+            contactCtx.lineWidth = 1;
+            
+            for (let x = gridSpacing; x < contactCanvas.width; x += gridSpacing) {
+                contactCtx.beginPath();
+                contactCtx.moveTo(x, 0);
+                contactCtx.lineTo(x, contactCanvas.height);
+                contactCtx.stroke();
+            }
+            
+            for (let y = gridSpacing; y < contactCanvas.height; y += gridSpacing) {
+                contactCtx.beginPath();
+                contactCtx.moveTo(0, y);
+                contactCtx.lineTo(contactCanvas.width, y);
+                contactCtx.stroke();
+            }
+
+            // Draw nodes
+            gridNodes.forEach(node => node.draw());
+
+            requestAnimationFrame(animateGrid);
+        }
+
+        animateGrid();
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            heroCanvas.width = heroCanvas.offsetWidth;
+            heroCanvas.height = heroCanvas.offsetHeight;
+            initHero();
+
+            updateCanvasSize();
+            initGrid();
+        });
+        
+        // Also reinitialize on window load to ensure proper sizing
+        window.addEventListener('load', () => {
+            updateCanvasSize();
+            initGrid();
+        });
+    </script>
+</body>
+</html>

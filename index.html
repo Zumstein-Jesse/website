@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jesse Zumstein | Creative Technologist • Technical Animator • Software Engineer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+        }
+
+        nav a {
+            color: #a8b2d1;
+            text-decoration: none;
+            font-size: 1.05em;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #64ffda;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #particleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 4.5em;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease-out;
+            position: relative;
+            cursor: default;
+        }
+
+        h1::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle 150px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 255, 255, 0.8) 0%,
+                rgba(102, 126, 234, 0.6) 30%,
+                transparent 70%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        h1:hover::before {
+            opacity: 1;
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #a8b2d1;
+            margin-bottom: 30px;
+            font-weight: 300;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .tagline {
+            font-size: 2.2em;
+            color: #64ffda;
+            animation: fadeInUp 1.4s ease-out;
+            font-weight: 500;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator span {
+            display: block;
+            width: 30px;
+            height: 50px;
+            border: 2px solid #667eea;
+            border-radius: 20px;
+            position: relative;
+        }
+
+        .scroll-indicator span::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background: #667eea;
+            border-radius: 50%;
+            animation: scroll 2s infinite;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-20px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        @keyframes scroll {
+            0% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(0);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        .section-title {
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ccd6f6;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #8892b0;
+            font-size: 1.2em;
+            margin-bottom: 60px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .skills-section {
+            background: #0f0f1e;
+            padding: 80px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #skillsCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        .tech-category {
+            background: linear-gradient(135deg, #1e1e3f 0%, #1a1a2e 100%);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .tech-category:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.3);
+        }
+
+        .tech-category::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .tech-category h3 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .tech-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(102, 126, 234, 0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+        }
+
+        .tech-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tech-item {
+            background: rgba(100, 255, 218, 0.1);
+            color: #64ffda;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 0.95em;
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            transition: all 0.3s;
+            cursor: default;
+        }
+
+        .tech-item:hover {
+            background: rgba(100, 255, 218, 0.2);
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+        }
+
+        .clients-section {
+            background: #0a0a0a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .clients-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(102, 126, 234, 0.15) 0%, transparent 25%),
+                radial-gradient(circle at 80% 70%, rgba(118, 75, 162, 0.12) 0%, transparent 25%),
+                radial-gradient(circle at 50% 50%, rgba(100, 255, 218, 0.08) 0%, transparent 30%);
+            pointer-events: none;
+            animation: gradientShift 15s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.1) rotate(5deg);
+            }
+        }
+
+        #clientsCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .clients-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 35px;
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .client-card {
+            background: linear-gradient(135deg, #1e1e3f 0%, #1a1a2e 100%);
+            padding: 40px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            position: relative;
+            overflow: hidden;
+            min-height: 180px;
+        }
+
+        .client-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .client-card:hover::before {
+            left: 100%;
+        }
+
+        .client-card:hover {
+            transform: translateY(-15px) scale(1.05);
+            box-shadow: 0 25px 60px rgba(102, 126, 234, 0.4);
+            border-color: rgba(100, 255, 218, 0.5);
+        }
+
+        .client-card img {
+            max-width: 100%;
+            max-height: 80px;
+            object-fit: contain;
+            filter: brightness(0.9) grayscale(0.3);
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .client-card:hover img {
+            filter: brightness(1.2) grayscale(0);
+        }
+
+        .experience-section {
+            background: #0f0f1e;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #experienceCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 50%;
+            position: relative;
+            margin-bottom: 50px;
+        }
+
+        .timeline-item:nth-child(even) {
+            justify-content: flex-start;
+            padding-left: 50%;
+            padding-right: 0;
+        }
+
+        .timeline-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #1e1e3f 100%);
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .timeline-content:hover {
+            transform: scale(1.03);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: #64ffda;
+            border: 4px solid #1a1a2e;
+            border-radius: 50%;
+            top: 30px;
+            z-index: 2;
+            box-shadow: 0 0 20px rgba(100, 255, 218, 0.5);
+        }
+
+        .timeline-content h3 {
+            color: #64ffda;
+            font-size: 1.6em;
+            margin-bottom: 8px;
+        }
+
+        .timeline-content .date {
+            color: #667eea;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .timeline-content p {
+            color: #a8b2d1;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        .projects-section {
+            background: #0a0a0a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .projects-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, transparent 50%),
+                linear-gradient(225deg, rgba(118, 75, 162, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        #projectsCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        .featured-project-hero {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 50px;
+            margin-bottom: 60px;
+            padding: 50px;
+            background: linear-gradient(135deg, #1e1e3f 0%, #1a1a2e 100%);
+            border-radius: 25px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.5s;
+        }
+
+        .featured-project-hero:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 70px rgba(102, 126, 234, 0.4);
+        }
+
+        .featured-project-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+
+        .featured-project-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent, rgba(100, 255, 218, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .featured-project-hero:hover::after {
+            opacity: 1;
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%); }
+            100% { transform: translateX(100%) translateY(100%); }
+        }
+
+        .featured-project-image {
+            position: relative;
+            z-index: 1;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .featured-project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .featured-project-hero:hover .featured-project-image img {
+            transform: scale(1.08);
+        }
+
+        .featured-overlay {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 2;
+        }
+
+        .featured-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            animation: pulse-badge 3s infinite;
+        }
+
+        @keyframes pulse-badge {
+            0%, 100% {
+                box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            }
+            50% {
+                box-shadow: 0 5px 25px rgba(102, 126, 234, 0.7);
+            }
+        }
+
+        .featured-project-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .featured-project-content h3 {
+            font-size: 2.5em;
+            color: #64ffda;
+            margin-bottom: 10px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .project-role {
+            color: #667eea;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: 600;
+            animation: fadeInUp 0.7s ease-out;
+        }
+
+        .project-description {
+            color: #a8b2d1;
+            line-height: 1.8;
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.9s ease-out;
+        }
+
+        .tag {
+            background: rgba(100, 255, 218, 0.1);
+            color: #64ffda;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            border: 1px solid rgba(100, 255, 218, 0.3);
+            transition: all 0.3s;
+            cursor: default;
+        }
+
+        .tag:hover {
+            background: rgba(100, 255, 218, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+        }
+
+        .projects-grid-modern {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+            position: relative;
+        }
+
+        .project-card-modern {
+            background: linear-gradient(135deg, #1e1e3f 0%, #1a1a2e 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+
+        .project-card-modern::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .project-card-modern:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 60px rgba(102, 126, 234, 0.5);
+            border-color: rgba(100, 255, 218, 0.5);
+        }
+
+        .project-card-modern:hover::before {
+            opacity: 1;
+        }
+
+        .project-image-wrapper {
+            position: relative;
+            overflow: hidden;
+            height: 280px;
+        }
+
+        .project-image-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(26, 26, 46, 0.8) 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .project-card-modern:hover .project-image-wrapper::after {
+            opacity: 1;
+        }
+
+        .project-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .project-card-modern:hover .project-image-wrapper img {
+            transform: scale(1.15) rotate(2deg);
+        }
+
+        .project-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(26, 26, 46, 0.95) 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 25px;
+            opacity: 0;
+            transition: opacity 0.4s;
+            z-index: 2;
+        }
+
+        .project-card-modern:hover .project-overlay {
+            opacity: 1;
+        }
+
+        .project-overlay-content p {
+            color: #a8b2d1;
+            line-height: 1.6;
+            font-size: 0.95em;
+            transform: translateY(20px);
+            transition: transform 0.4s 0.1s;
+        }
+
+        .project-card-modern:hover .project-overlay-content p {
+            transform: translateY(0);
+        }
+
+        .project-card-content {
+            padding: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .project-card-content h4 {
+            color: #64ffda;
+            font-size: 1.4em;
+            margin-bottom: 8px;
+            transition: color 0.3s;
+        }
+
+        .project-card-modern:hover .project-card-content h4 {
+            color: #fff;
+        }
+
+        .project-card-content p {
+            color: #8892b0;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+        }
+
+        .project-tags-small {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag-small {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.3s;
+        }
+
+        .project-card-modern:hover .tag-small {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        footer {
+            background: #1a1a2e;
+            padding: 40px 20px;
+            text-align: center;
+            color: #8892b0;
+            border-top: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .subtitle {
+                font-size: 1.1em;
+            }
+
+            .section-title {
+                font-size: 2em;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item,
+            .timeline-item:nth-child(even) {
+                justify-content: flex-start;
+                padding-left: 60px;
+                padding-right: 0;
+            }
+
+            .timeline-dot {
+                left: 20px;
+            }
+
+            .timeline-content {
+                width: 100%;
+            }
+
+            .featured-project-hero {
+                grid-template-columns: 1fr;
+                padding: 30px;
+            }
+
+            .featured-project-content h3 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">JZ</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header>
+        <canvas id="particleCanvas"></canvas>
+        <div class="header-content">
+            <h1 id="mainTitle" data-text="Jesse Zumstein">Jesse Zumstein</h1>
+            <p class="subtitle">Creative Technologist • Technical Animator • Software Engineer</p>
+            <p class="tagline">Where Art Meets Innovation</p>
+        </div>
+        <div class="scroll-indicator">
+            <span></span>
+        </div>
+    </header>
+
+    <section class="skills-section">
+        <canvas id="skillsCanvas"></canvas>
+        <div class="container">
+            <h2 class="section-title">Technical Arsenal</h2>
+            <p class="section-subtitle">Blending creativity with cutting-edge technology to build immersive experiences</p>
+            
+            <div class="tech-stack">
+                <div class="tech-category">
+                    <h3><span class="tech-icon">🎮</span>Game Development</h3>
+                    <div class="tech-list">
+                        <span class="tech-item">Unreal Engine 5</span>
+                        <span class="tech-item">Blueprints</span>
+                        <span class="tech-item">Unity</span>
+                        <span class="tech-item">C++</span>
+                        <span class="tech-item">C#</span>
+                    </div>
+                </div>
+
+                <div class="tech-category">
+                    <h3><span class="tech-icon">🎨</span>3D & Animation</h3>
+                    <div class="tech-list">
+                        <span class="tech-item">Maya</span>
+                        <span class="tech-item">MetaHuman</span>
+                        <span class="tech-item">Blender</span>
+                        <span class="tech-item">Substance Painter</span>
+                        <span class="tech-item">ZBrush</span>
+                    </div>
+                </div>
+
+                <div class="tech-category">
+                    <h3><span class="tech-icon">💻</span>Software Engineering</h3>
+                    <div class="tech-list">
+                        <span class="tech-item">Python</span>
+                        <span class="tech-item">JavaScript</span>
+                        <span class="tech-item">React</span>
+                        <span class="tech-item">Node.js</span>
+                        <span class="tech-item">Git</span>
+                    </div>
+                </div>
+
+                <div class="tech-category">
+                    <h3><span class="tech-icon">🤖</span>ML & Automation</h3>
+                    <div class="tech-list">
+                        <span class="tech-item">TensorFlow</span>
+                        <span class="tech-item">PyTorch</span>
+                        <span class="tech-item">Pipeline Tools</span>
+                        <span class="tech-item">CI/CD</span>
+                        <span class="tech-item">Test Automation</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="clients-section">
+        <canvas id="clientsCanvas"></canvas>
+        <div class="container">
+            <h2 class="section-title">Clients & Partners</h2>
+            <p class="section-subtitle">Trusted by industry leaders to deliver exceptional results</p>
+            <div class="clients-showcase">
+                <div class="client-card">
+                    <img src="images/EpicB.png" alt="Epic Games">
+                </div>
+                <div class="client-card">
+                    <img src="images/WebNetherrealmB.png" alt="Netherrealm Studios">
+                </div>
+                <div class="client-card">
+                    <img src="images/FMB.png" alt="Frame Machine">
+                </div>
+                <div class="client-card">
+                    <img src="images/2kB.png" alt="2K Games">
+                </div>
+                <div class="client-card">
+                    <img src="images/WBB.png" alt="Warner Brothers">
+                </div>
+                <div class="client-card">
+                    <img src="images/SonyB.png" alt="Sony">
+                </div>
+                <div class="client-card">
+                    <img src="images/MetaB.png" alt="Meta" style="max-height: 60px;">
+                </div>
+                <div class="client-card">
+                    <img src="images/CNB.png" alt="Code Ninjas">
+                </div>
+                <div class="client-card">
+                    <img src="images/FrenB.png" alt="FREN Inc">
+                </div>
+                <div class="client-card">
+                    <img src="images/NetvrkB.png" alt="Netvrk" style="border-radius: 10px;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="experience-section">
+        <canvas id="experienceCanvas"></canvas>
+        <div class="container">
+            <h2 class="section-title">Experience</h2>
+            <p class="section-subtitle">A journey through AAA game development and technical innovation</p>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Meta</h3>
+                        <div class="date">2025 - Present</div>
+                        <p>Prototyped AR/VR projects, built custom shaders, created rigs and animations for creatures, characters and props.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Frame Machine</h3>
+                        <div class="date">2022 - 2025</div>
+                        <p>Developed pipeline processes and automation tools for a 50+ member team using Python & Blueprints.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Amader Shopno</h3>
+                        <div class="date">2024 - Present</div>
+                        <p>Leading technical initiatives to accelerate the growth of the non-profit's mission. Handling all technical issues & requests.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>FREN Inc.</h3>
+                        <div class="date">2022 - 2023</div>
+                        <p>Modeled, textured, and rigged a series of characters for the Jepson Center & Telfair Children's Art Museum.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Netvrk</h3>
+                        <div class="date">2022</div>
+                        <p>Rigged and animated otherworldly quadruped character in Unreal Engine for Web3 based Metaverse game.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Epic Games</h3>
+                        <div class="date">2021 - 2022</div>
+                        <p>Oversaw build health for Unreal Engine 5 reporting directly to developers. Executed 4,000+ test cases.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>Code Ninjas</h3>
+                        <div class="date">2018 - 2022</div>
+                        <p>Programming & game development instructor for children ages 7-14. Taught C#, JavaScript, robotics, and more!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="projects-section">
+        <canvas id="projectsCanvas"></canvas>
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <p class="section-subtitle">AAA titles played by millions worldwide</p>
+            
+            <div class="featured-project-hero">
+                <div class="featured-project-image">
+                    <img src="https://static.wixstatic.com/media/01cb28_fed554d8f3f742fd8dd9f8d3bc5fff16~mv2.jpg/v1/fill/w_273,h_309,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/hwl_edited.jpg" alt="Hogwarts Legacy">
+                    <div class="featured-overlay">
+                        <span class="featured-badge">Featured</span>
+                    </div>
+                </div>
+                <div class="featured-project-content">
+                    <h3>Hogwarts Legacy</h3>
+                    <p class="project-role">Cinematic Assembly</p>
+                    <p class="project-description">Contributed to the cinematic pipeline for one of the most anticipated games of 2023. Assembled complex cinematic sequences that brought the magical world to life.</p>
+                    <div class="project-tags">
+                        <span class="tag">Unreal Engine</span>
+                        <span class="tag">Cinematics</span>
+                        <span class="tag">AAA</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="projects-grid-modern">
+                <div class="project-card-modern">
+                    <div class="project-image-wrapper">
+                        <img src="https://static.wixstatic.com/media/01cb28_b860038d87344301bfc7ab6de1ac26c7~mv2.png/v1/fill/w_273,h_309,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/mksco.png" alt="Mortal Kombat Onslaught">
+                        <div class="project-overlay">
+                            <div class="project-overlay-content">
+                                <p>Motion capture retargeting and character rigging for NetherRealm's mobile fighting game</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card-content">
+                        <h4>Mortal Kombat Onslaught</h4>
+                        <p>Mocap Retargeting & Rigging</p>
+                        <div class="project-tags-small">
+                            <span class="tag-small">Maya</span>
+                            <span class="tag-small">Rigging</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card-modern">
+                    <div class="project-image-wrapper">
+                        <img src="https://static.wixstatic.com/media/01cb28_e8ff527cfc4e4cb39f3f34018880f428~mv2.png/v1/fill/w_273,h_309,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/legogo.png" alt="Lego 2k Drive">
+                        <div class="project-overlay">
+                            <div class="project-overlay-content">
+                                <p>UE assembly and character rigging for the colorful kart racing adventure</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card-content">
+                        <h4>Lego 2K Drive</h4>
+                        <p>UE Assembly & Rigging</p>
+                        <div class="project-tags-small">
+                            <span class="tag-small">Unreal Engine</span>
+                            <span class="tag-small">Assembly</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card-modern">
+                    <div class="project-image-wrapper">
+                        <img src="https://static.wixstatic.com/media/01cb28_09ab93dfa6944dd88b34d9c43263f35a~mv2.png/v1/fill/w_273,h_309,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/doghot.png" alt="Fortnite & Festival">
+                        <div class="project-overlay">
+                            <div class="project-overlay-content">
+                                <p>Blueprint development and character rigging for Epic's flagship titles</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-card-content">
+                        <h4>Fortnite & Festival</h4>
+                        <p>Blueprinting & Rigging</p>
+                        <div class="project-tags-small">
+                            <span class="tag-small">Blueprints</span>
+                            <span class="tag-small">Characters</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Jesse Zumstein. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Particle Canvas Animation
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let mouse = {
+            x: canvas.width / 2,
+            y: canvas.height / 2
+        };
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1;
+                this.distance = 0;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(102, 126, 234, ${1 - this.distance / 200})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            update() {
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                this.distance = Math.sqrt(dx * dx + dy * dy);
+                let forceDirectionX = dx / this.distance;
+                let forceDirectionY = dy / this.distance;
+                let maxDistance = 150;
+                let force = (maxDistance - this.distance) / maxDistance;
+                let directionX = forceDirectionX * force * this.density;
+                let directionY = forceDirectionY * force * this.density;
+
+                if (this.distance < maxDistance) {
+                    this.x -= directionX;
+                    this.y -= directionY;
+                } else {
+                    if (this.x !== this.baseX) {
+                        let dx = this.x - this.baseX;
+                        this.x -= dx / 10;
+                    }
+                    if (this.y !== this.baseY) {
+                        let dy = this.y - this.baseY;
+                        this.y -= dy / 10;
+                    }
+                }
+
+                // Drift
+                this.baseX += this.vx;
+                this.baseY += this.vy;
+
+                // Boundaries
+                if (this.baseX < 0 || this.baseX > canvas.width) {
+                    this.vx = -this.vx;
+                    this.baseX = Math.max(0, Math.min(canvas.width, this.baseX));
+                }
+                if (this.baseY < 0 || this.baseY > canvas.height) {
+                    this.vy = -this.vy;
+                    this.baseY = Math.max(0, Math.min(canvas.height, this.baseY));
+                }
+            }
+        }
+
+        // Create particles
+        let particlesArray = [];
+        const numberOfParticles = 150;
+
+        function init() {
+            particlesArray = [];
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        // Connect particles
+        function connect() {
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let dx = particlesArray[a].x - particlesArray[b].x;
+                    let dy = particlesArray[a].y - particlesArray[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 100) {
+                        ctx.strokeStyle = `rgba(102, 126, 234, ${1 - distance / 100})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            connect();
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        // Mouse move event
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        // Resize event
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            init();
+        });
+
+        // Touch support for mobile
+        window.addEventListener('touchmove', (e) => {
+            mouse.x = e.touches[0].clientX;
+            mouse.y = e.touches[0].clientY;
+        });
+
+        // Interactive Title Effect
+        const mainTitle = document.getElementById('mainTitle');
+        
+        mainTitle.addEventListener('mousemove', (e) => {
+            const rect = mainTitle.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            mainTitle.style.setProperty('--mouse-x', `${x}%`);
+            mainTitle.style.setProperty('--mouse-y', `${y}%`);
+        });
+
+        // Clients Section - Animated Grid Background
+        const clientsCanvas = document.getElementById('clientsCanvas');
+        const clientsCtx = clientsCanvas.getContext('2d');
+        
+        function setupClientsCanvas() {
+            const section = document.querySelector('.clients-section');
+            clientsCanvas.width = section.offsetWidth;
+            clientsCanvas.height = section.offsetHeight;
+        }
+        setupClientsCanvas();
+
+        let clientsMouse = { x: 0, y: 0 };
+        
+        clientsCanvas.addEventListener('mousemove', (e) => {
+            const rect = clientsCanvas.getBoundingClientRect();
+            clientsMouse.x = e.clientX - rect.left;
+            clientsMouse.y = e.clientY - rect.top;
+        });
+
+        class GridNode {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.baseSize = 2;
+                this.size = this.baseSize;
+                this.maxSize = 8;
+            }
+
+            draw() {
+                const dx = clientsMouse.x - this.x;
+                const dy = clientsMouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const maxDistance = 200;
+
+                if (distance < maxDistance) {
+                    this.size = this.baseSize + (1 - distance / maxDistance) * this.maxSize;
+                    const opacity = 1 - distance / maxDistance;
+                    clientsCtx.fillStyle = `rgba(102, 126, 234, ${opacity * 0.8})`;
+                    clientsCtx.shadowBlur = 15;
+                    clientsCtx.shadowColor = 'rgba(102, 126, 234, 0.5)';
+                } else {
+                    this.size = this.baseSize;
+                    clientsCtx.fillStyle = 'rgba(102, 126, 234, 0.3)';
+                    clientsCtx.shadowBlur = 0;
+                }
+
+                clientsCtx.beginPath();
+                clientsCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                clientsCtx.fill();
+            }
+        }
+
+        const gridSpacing = 80;
+        const gridNodes = [];
+        
+        for (let x = gridSpacing; x < clientsCanvas.width; x += gridSpacing) {
+            for (let y = gridSpacing; y < clientsCanvas.height; y += gridSpacing) {
+                gridNodes.push(new GridNode(x, y));
+            }
+        }
+
+        function animateClientsBackground() {
+            clientsCtx.clearRect(0, 0, clientsCanvas.width, clientsCanvas.height);
+
+            // Draw grid lines
+            clientsCtx.strokeStyle = 'rgba(102, 126, 234, 0.1)';
+            clientsCtx.lineWidth = 1;
+            
+            for (let x = gridSpacing; x < clientsCanvas.width; x += gridSpacing) {
+                clientsCtx.beginPath();
+                clientsCtx.moveTo(x, 0);
+                clientsCtx.lineTo(x, clientsCanvas.height);
+                clientsCtx.stroke();
+            }
+            
+            for (let y = gridSpacing; y < clientsCanvas.height; y += gridSpacing) {
+                clientsCtx.beginPath();
+                clientsCtx.moveTo(0, y);
+                clientsCtx.lineTo(clientsCanvas.width, y);
+                clientsCtx.stroke();
+            }
+
+            // Draw nodes
+            gridNodes.forEach(node => node.draw());
+
+            requestAnimationFrame(animateClientsBackground);
+        }
+
+        animateClientsBackground();
+
+        // Projects Section - Same Grid Pattern as Clients
+        const projectsCanvas = document.getElementById('projectsCanvas');
+        const projectsCtx = projectsCanvas.getContext('2d');
+        
+        function setupProjectsCanvas() {
+            const section = document.querySelector('.projects-section');
+            projectsCanvas.width = section.offsetWidth;
+            projectsCanvas.height = section.offsetHeight;
+        }
+        setupProjectsCanvas();
+
+        let projectsMouse = { x: 0, y: 0 };
+        
+        projectsCanvas.addEventListener('mousemove', (e) => {
+            const rect = projectsCanvas.getBoundingClientRect();
+            projectsMouse.x = e.clientX - rect.left;
+            projectsMouse.y = e.clientY - rect.top;
+        });
+
+        class ProjectGridNode {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.baseSize = 2;
+                this.size = this.baseSize;
+                this.maxSize = 8;
+            }
+
+            draw() {
+                const dx = projectsMouse.x - this.x;
+                const dy = projectsMouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const maxDistance = 200;
+
+                if (distance < maxDistance) {
+                    this.size = this.baseSize + (1 - distance / maxDistance) * this.maxSize;
+                    const opacity = 1 - distance / maxDistance;
+                    projectsCtx.fillStyle = `rgba(102, 126, 234, ${opacity * 0.8})`;
+                    projectsCtx.shadowBlur = 15;
+                    projectsCtx.shadowColor = 'rgba(102, 126, 234, 0.5)';
+                } else {
+                    this.size = this.baseSize;
+                    projectsCtx.fillStyle = 'rgba(102, 126, 234, 0.3)';
+                    projectsCtx.shadowBlur = 0;
+                }
+
+                projectsCtx.beginPath();
+                projectsCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                projectsCtx.fill();
+            }
+        }
+
+        const projectGridSpacing = 80;
+        const projectGridNodes = [];
+        
+        for (let x = projectGridSpacing; x < projectsCanvas.width; x += projectGridSpacing) {
+            for (let y = projectGridSpacing; y < projectsCanvas.height; y += projectGridSpacing) {
+                projectGridNodes.push(new ProjectGridNode(x, y));
+            }
+        }
+
+        function animateProjectsBackground() {
+            projectsCtx.clearRect(0, 0, projectsCanvas.width, projectsCanvas.height);
+
+            // Draw grid lines
+            projectsCtx.strokeStyle = 'rgba(102, 126, 234, 0.1)';
+            projectsCtx.lineWidth = 1;
+            
+            for (let x = projectGridSpacing; x < projectsCanvas.width; x += projectGridSpacing) {
+                projectsCtx.beginPath();
+                projectsCtx.moveTo(x, 0);
+                projectsCtx.lineTo(x, projectsCanvas.height);
+                projectsCtx.stroke();
+            }
+            
+            for (let y = projectGridSpacing; y < projectsCanvas.height; y += projectGridSpacing) {
+                projectsCtx.beginPath();
+                projectsCtx.moveTo(0, y);
+                projectsCtx.lineTo(projectsCanvas.width, y);
+                projectsCtx.stroke();
+            }
+
+            // Draw nodes
+            projectGridNodes.forEach(node => node.draw());
+
+            requestAnimationFrame(animateProjectsBackground);
+        }
+
+        animateProjectsBackground();
+
+        // Skills Section - Mouse-Reactive Wave Patterns
+        const skillsCanvas = document.getElementById('skillsCanvas');
+        const skillsCtx = skillsCanvas.getContext('2d');
+        
+        function setupSkillsCanvas() {
+            const section = document.querySelector('.skills-section');
+            skillsCanvas.width = section.offsetWidth;
+            skillsCanvas.height = section.offsetHeight;
+        }
+        setupSkillsCanvas();
+
+        let skillsMouse = { x: skillsCanvas.width / 2, y: skillsCanvas.height / 2 };
+        
+        skillsCanvas.addEventListener('mousemove', (e) => {
+            const rect = skillsCanvas.getBoundingClientRect();
+            skillsMouse.x = e.clientX - rect.left;
+            skillsMouse.y = e.clientY - rect.top;
+        });
+
+        class Wave {
+            constructor(index) {
+                this.index = index;
+                this.baseAmplitude = 15 + Math.random() * 10;
+                this.frequency = 0.015 + Math.random() * 0.01;
+                this.offset = Math.random() * Math.PI * 2;
+                this.y = (skillsCanvas.height / 5) * (index + 1);
+                this.opacity = 0.15 + Math.random() * 0.15;
+                this.hue = 240 + Math.random() * 40; // Blue to purple
+                this.influenceRadius = 400 + index * 100; // Halved radius
+            }
+
+            draw() {
+                skillsCtx.beginPath();
+                skillsCtx.moveTo(0, this.y);
+
+                for (let x = 0; x < skillsCanvas.width; x += 5) {
+                    // Calculate base wave
+                    let y = this.y + Math.sin(x * this.frequency + this.offset) * this.baseAmplitude;
+                    
+                    // Calculate distance from mouse to this point
+                    const dx = skillsMouse.x - x;
+                    const dy = skillsMouse.y - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    // Apply mouse influence
+                    if (distance < this.influenceRadius) {
+                        const influence = 1 - (distance / this.influenceRadius);
+                        const deformation = influence * 3 * Math.sin(distance * 0.05); // Subtle deformation
+                        y += deformation;
+                    }
+                    
+                    skillsCtx.lineTo(x, y);
+                }
+
+                skillsCtx.strokeStyle = `hsla(${this.hue}, 70%, 60%, ${this.opacity})`;
+                skillsCtx.lineWidth = 3;
+                skillsCtx.stroke();
+
+                // Add glow effect
+                skillsCtx.shadowBlur = 20;
+                skillsCtx.shadowColor = `hsla(${this.hue}, 70%, 60%, ${this.opacity * 0.5})`;
+                skillsCtx.stroke();
+                skillsCtx.shadowBlur = 0;
+            }
+        }
+
+        const waves = [];
+        for (let i = 0; i < 4; i++) {
+            waves.push(new Wave(i));
+        }
+
+        function animateSkillsBackground() {
+            skillsCtx.clearRect(0, 0, skillsCanvas.width, skillsCanvas.height);
+            
+            waves.forEach(wave => wave.draw());
+            
+            requestAnimationFrame(animateSkillsBackground);
+        }
+
+        animateSkillsBackground();
+
+        // Experience Section - Mouse-Reactive Wave Patterns (same as Skills)
+        const experienceCanvas = document.getElementById('experienceCanvas');
+        const experienceCtx = experienceCanvas.getContext('2d');
+        
+        function setupExperienceCanvas() {
+            const section = document.querySelector('.experience-section');
+            experienceCanvas.width = section.offsetWidth;
+            experienceCanvas.height = section.offsetHeight;
+        }
+        setupExperienceCanvas();
+
+        let experienceMouse = { x: experienceCanvas.width / 2, y: experienceCanvas.height / 2 };
+        
+        experienceCanvas.addEventListener('mousemove', (e) => {
+            const rect = experienceCanvas.getBoundingClientRect();
+            experienceMouse.x = e.clientX - rect.left;
+            experienceMouse.y = e.clientY - rect.top;
+        });
+
+        class ExperienceWave {
+            constructor(index) {
+                this.index = index;
+                this.baseAmplitude = 15 + Math.random() * 10;
+                this.frequency = 0.015 + Math.random() * 0.01;
+                this.offset = Math.random() * Math.PI * 2;
+                this.y = (experienceCanvas.height / 5) * (index + 1);
+                this.opacity = 0.15 + Math.random() * 0.15;
+                this.hue = 240 + Math.random() * 40; // Blue to purple
+                this.influenceRadius = 400 + index * 100; // Same radius as Skills
+            }
+
+            draw() {
+                experienceCtx.beginPath();
+                experienceCtx.moveTo(0, this.y);
+
+                for (let x = 0; x < experienceCanvas.width; x += 5) {
+                    // Calculate base wave
+                    let y = this.y + Math.sin(x * this.frequency + this.offset) * this.baseAmplitude;
+                    
+                    // Calculate distance from mouse to this point
+                    const dx = experienceMouse.x - x;
+                    const dy = experienceMouse.y - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    // Apply mouse influence
+                    if (distance < this.influenceRadius) {
+                        const influence = 1 - (distance / this.influenceRadius);
+                        const deformation = influence * 3 * Math.sin(distance * 0.05); // Subtle deformation
+                        y += deformation;
+                    }
+                    
+                    experienceCtx.lineTo(x, y);
+                }
+
+                experienceCtx.strokeStyle = `hsla(${this.hue}, 70%, 60%, ${this.opacity})`;
+                experienceCtx.lineWidth = 3;
+                experienceCtx.stroke();
+
+                // Add glow effect
+                experienceCtx.shadowBlur = 20;
+                experienceCtx.shadowColor = `hsla(${this.hue}, 70%, 60%, ${this.opacity * 0.5})`;
+                experienceCtx.stroke();
+                experienceCtx.shadowBlur = 0;
+            }
+        }
+
+        const experienceWaves = [];
+        for (let i = 0; i < 4; i++) {
+            experienceWaves.push(new ExperienceWave(i));
+        }
+
+        function animateExperienceBackground() {
+            experienceCtx.clearRect(0, 0, experienceCanvas.width, experienceCanvas.height);
+            
+            experienceWaves.forEach(wave => wave.draw());
+            
+            requestAnimationFrame(animateExperienceBackground);
+        }
+
+        animateExperienceBackground();
+
+        // Handle resize for all canvases
+        window.addEventListener('resize', () => {
+            setupClientsCanvas();
+            setupProjectsCanvas();
+            setupSkillsCanvas();
+            setupExperienceCanvas();
+            
+            // Reinitialize grid nodes for clients
+            gridNodes.length = 0;
+            for (let x = gridSpacing; x < clientsCanvas.width; x += gridSpacing) {
+                for (let y = gridSpacing; y < clientsCanvas.height; y += gridSpacing) {
+                    gridNodes.push(new GridNode(x, y));
+                }
+            }
+            
+            // Reinitialize grid nodes for projects
+            projectGridNodes.length = 0;
+            for (let x = projectGridSpacing; x < projectsCanvas.width; x += projectGridSpacing) {
+                for (let y = projectGridSpacing; y < projectsCanvas.height; y += projectGridSpacing) {
+                    projectGridNodes.push(new ProjectGridNode(x, y));
+                }
+            }
+        });
+    </script>
+</body>
+</html>

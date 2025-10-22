@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects | Jesse Zumstein</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+        }
+
+        nav a {
+            color: #a8b2d1;
+            text-decoration: none;
+            font-size: 1.05em;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #64ffda;
+        }
+
+        .hero-section {
+            padding: 150px 20px 80px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #heroCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            cursor: default;
+        }
+
+        h1::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle 150px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 255, 255, 0.8) 0%,
+                rgba(102, 126, 234, 0.6) 30%,
+                transparent 70%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        h1:hover::before {
+            opacity: 1;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #a8b2d1;
+            margin-bottom: 30px;
+        }
+
+        #projectsCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        .filter-section {
+            background: #0f0f1e;
+            padding: 40px 20px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .filter-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(30, 30, 63, 0.5);
+            color: #a8b2d1;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .projects-content {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .project-showcase {
+            margin-bottom: 80px;
+        }
+
+        .project-large {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 50px;
+            background: linear-gradient(135deg, #1e1e3f 0%, #1a1a2e 100%);
+            border-radius: 25px;
+            overflow: hidden;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            margin-bottom: 50px;
+        }
+
+        .project-large:nth-child(even) {
+            grid-template-columns: 1fr 1.2fr;
+        }
+
+        .project-large:nth-child(even) .project-image {
+            order: 2;
+        }
+
+        .project-image {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .project-large:hover .project-image img {
+            transform: scale(1.05);
+        }
+
+        .project-details {
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .project-category {
+            color: #667eea;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .project-details h2 {
+            font-size: 2.2em;
+            color: #64ffda;
+            margin-bottom: 15px;
+        }
+
+        .project-role {
+            color: #8892b0;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .project-description {
+            color: #a8b2d1;
+            line-height: 1.9;
+            font-size: 1.05em;
+            margin-bottom: 25px;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .tech-tag {
+            background: rgba(100, 255, 218, 0.1);
+            color: #64ffda;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            border: 1px solid rgba(100, 255, 218, 0.3);
+        }
+
+        .project-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .stat-box {
+            background: rgba(26, 26, 46, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #667eea;
+        }
+
+        .stat-label {
+            color: #8892b0;
+            font-size: 0.85em;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            color: #64ffda;
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+        }
+
+        .project-card {
+            background: linear-gradient(135deg, #1e1e3f 0%, #1a1a2e 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: all 0.4s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.4);
+        }
+
+        .project-card-image {
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s;
+        }
+
+        .project-card:hover .project-card-image img {
+            transform: scale(1.1);
+        }
+
+        .project-card-content {
+            padding: 25px;
+        }
+
+        .project-card-content .project-category {
+            font-size: 0.8em;
+        }
+
+        .project-card-content h3 {
+            color: #64ffda;
+            font-size: 1.4em;
+            margin-bottom: 8px;
+        }
+
+        .project-card-content p {
+            color: #8892b0;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            background: #1a1a2e;
+            padding: 40px 20px;
+            text-align: center;
+            color: #8892b0;
+            border-top: 1px solid rgba(102, 126, 234, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        @media (max-width: 968px) {
+            .project-large,
+            .project-large:nth-child(even) {
+                grid-template-columns: 1fr;
+            }
+
+            .project-large:nth-child(even) .project-image {
+                order: 0;
+            }
+
+            .project-stats {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 2.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">JZ</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <canvas id="heroCanvas"></canvas>
+        <div class="hero-content">
+            <h1 id="mainTitle" data-text="Featured Projects">Featured Projects</h1>
+            <p class="subtitle">AAA games, immersive experiences, and technical innovations</p>
+        </div>
+    </section>
+
+    <div style="position: relative;">
+        <canvas id="projectsCanvas"></canvas>
+
+        <section class="filter-section">
+        <div class="filter-container">
+            <button class="filter-btn active">All Projects</button>
+            <button class="filter-btn">AAA Games</button>
+            <button class="filter-btn">Pipeline Tools</button>
+            <button class="filter-btn">AR/VR</button>
+            <button class="filter-btn">Animation</button>
+        </div>
+    </section>
+
+    <section class="projects-content">
+        <div class="project-showcase">
+            <div class="project-large">
+                <div class="project-image">
+                    <img src="https://static.wixstatic.com/media/01cb28_fed554d8f3f742fd8dd9f8d3bc5fff16~mv2.jpg/v1/fill/w_273,h_309,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/hwl_edited.jpg" alt="Hogwarts Legacy">
+                </div>
+                <div class="project-details">
+                    <div class="project-category">AAA Game Development</div>
+                    <h2>Hogwarts Legacy</h2>
+                    <p class="project-role">Cinematic Assembly</p>
+                    <p class="project-description">Contributed to the cinematic pipeline for one of 2023's most anticipated AAA titles. Assembled complex cinematic sequences, optimized performance, and collaborated with the Frame Machine team to deliver stunning storytelling moments in the Wizarding World.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Unreal Engine 5</span>
+                        <span class="tech-tag">Sequencer</span>
+                        <span class="tech-tag">Cinematics</span>
+                        <span class="tech-tag">Pipeline Tools</span>
+                    </div>
+                    <div class="project-stats">
+                        <div class="stat-box">
+                            <div class="stat-label">Release Year</div>
+                            <div class="stat-value">2023</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Players</div>
+                            <div class="stat-value">15M+</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-large">
+                <div class="project-image">
+                    <img src="https://static.wixstatic.com/media/01cb28_09ab93dfa6944dd88b34d9c43263f35a~mv2.png/v1/fill/w_273,h_309,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/doghot.png" alt="Fortnite">
+                </div>
+                <div class="project-details">
+                    <div class="project-category">Live Service Game</div>
+                    <h2>Fortnite & Fortnite Festival</h2>
+                    <p class="project-role">Blueprinting & Character Rigging</p>
+                    <p class="project-description">Developed Blueprint systems and rigged characters for Epic Games' flagship battle royale and its music-driven spin-off. Worked on performance optimization, character systems, and ensured seamless integration of new content for millions of daily players.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Blueprints</span>
+                        <span class="tech-tag">Character Rigging</span>
+                        <span class="tech-tag">Maya</span>
+                        <span class="tech-tag">Live Ops</span>
+                    </div>
+                    <div class="project-stats">
+                        <div class="stat-box">
+                            <div class="stat-label">Active Players</div>
+                            <div class="stat-value">500M+</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Platform</div>
+                            <div class="stat-value">Cross-platform</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-large">
+                <div class="project-image">
+                    <img src="https://static.wixstatic.com/media/01cb28_b860038d87344301bfc7ab6de1ac26c7~mv2.png/v1/fill/w_273,h_309,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/mksco.png" alt="Mortal Kombat">
+                </div>
+                <div class="project-details">
+                    <div class="project-category">Mobile AAA</div>
+                    <h2>Mortal Kombat Onslaught</h2>
+                    <p class="project-role">Mocap Retargeting & Character Rigging</p>
+                    <p class="project-description">Retargeted motion capture data and rigged iconic Mortal Kombat characters for NetherRealm's mobile fighting experience. Optimized rigs for mobile performance while maintaining the brutal, fluid combat the franchise is known for.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Maya</span>
+                        <span class="tech-tag">Motion Capture</span>
+                        <span class="tech-tag">Retargeting</span>
+                        <span class="tech-tag">Mobile Optimization</span>
+                    </div>
+                    <div class="project-stats">
+                        <div class="stat-box">
+                            <div class="stat-label">Characters Rigged</div>
+                            <div class="stat-value">20+</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Studio</div>
+                            <div class="stat-value">NetherRealm</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 style="font-size: 2.5em; color: #ccd6f6; text-align: center; margin-bottom: 50px;">More Projects</h2>
+
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-card-image">
+                    <img src="https://static.wixstatic.com/media/01cb28_e8ff527cfc4e4cb39f3f34018880f428~mv2.png/v1/fill/w_273,h_309,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/legogo.png" alt="Lego 2K Drive">
+                </div>
+                <div class="project-card-content">
+                    <div class="project-category">Racing Game</div>
+                    <h3>Lego 2K Drive</h3>
+                    <p>UE assembly and character rigging for the open-world kart racing game</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Unreal Engine</span>
+                        <span class="tech-tag">Rigging</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-card-image">
+                    <img src="https://images.unsplash.com/photo-1617802690992-15d93263d3a9?w=600" alt="Meta AR/VR">
+                </div>
+                <div class="project-card-content">
+                    <div class="project-category">AR/VR</div>
+                    <h3>Meta Prototypes</h3>
+                    <p>Experimental AR/VR experiences with custom shaders and creature rigging</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Unity</span>
+                        <span class="tech-tag">Shaders</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-card-image">
+                    <img src="https://images.unsplash.com/photo-1614680376408-81e91ffe3db7?w=600" alt="Pipeline Tools">
+                </div>
+                <div class="project-card-content">
+                    <div class="project-category">Pipeline Development</div>
+                    <h3>Frame Machine Pipeline</h3>
+                    <p>Python automation tools for 50+ person production teams</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Automation</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-card-image">
+                    <img src="https://pbs.twimg.com/profile_images/1487509088187953163/yW-n_Jjj_400x400.jpg" alt="Netvrk">
+                </div>
+                <div class="project-card-content">
+                    <div class="project-category">Web3 Gaming</div>
+                    <h3>Netvrk Metaverse</h3>
+                    <p>Rigged and animated quadruped creatures for Web3 metaverse</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Unreal Engine</span>
+                        <span class="tech-tag">Animation</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-card-image">
+                    <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600" alt="Unreal Engine 5">
+                </div>
+                <div class="project-card-content">
+                    <div class="project-category">Engine Development</div>
+                    <h3>Unreal Engine 5 QA</h3>
+                    <p>Build health and test automation for UE5 early development</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">C++</span>
+                        <span class="tech-tag">Testing</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-card-image">
+                    <img src="https://images.squarespace-cdn.com/content/v1/5d26a0eb0ef4000001ca2090/1572296994489-UX8JLCFUQNL7H0CVTM3R/FREN_Logo_Digital_Horizontal_Color_RGB.png?format=1500w" alt="FREN Inc">
+                </div>
+                <div class="project-card-content">
+                    <div class="project-category">Educational</div>
+                    <h3>Children's Museum Characters</h3>
+                    <p>Modeled, textured, and rigged characters for Telfair Museums</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Maya</span>
+                        <span class="tech-tag">Character Art</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Jesse Zumstein. All rights reserved.</p>
+    </footer>
+    </div>
+
+    <script>
+        // Simple filter functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                // In a real implementation, this would filter the projects
+            });
+        });
+
+        // Interactive Title Effect
+        const mainTitle = document.getElementById('mainTitle');
+        
+        mainTitle.addEventListener('mousemove', (e) => {
+            const rect = mainTitle.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            mainTitle.style.setProperty('--mouse-x', `${x}%`);
+            mainTitle.style.setProperty('--mouse-y', `${y}%`);
+        });
+
+        // Hero Particle Canvas Animation
+        const heroCanvas = document.getElementById('heroCanvas');
+        const heroCtx = heroCanvas.getContext('2d');
+        
+        heroCanvas.width = heroCanvas.offsetWidth;
+        heroCanvas.height = heroCanvas.offsetHeight;
+
+        let heroMouse = {
+            x: heroCanvas.width / 2,
+            y: heroCanvas.height / 2
+        };
+
+        class HeroParticle {
+            constructor() {
+                this.x = Math.random() * heroCanvas.width;
+                this.y = Math.random() * heroCanvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1;
+                this.distance = 0;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+            }
+
+            draw() {
+                heroCtx.fillStyle = `rgba(102, 126, 234, ${1 - this.distance / 200})`;
+                heroCtx.beginPath();
+                heroCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                heroCtx.closePath();
+                heroCtx.fill();
+            }
+
+            update() {
+                let dx = heroMouse.x - this.x;
+                let dy = heroMouse.y - this.y;
+                this.distance = Math.sqrt(dx * dx + dy * dy);
+                let forceDirectionX = dx / this.distance;
+                let forceDirectionY = dy / this.distance;
+                let maxDistance = 150;
+                let force = (maxDistance - this.distance) / maxDistance;
+                let directionX = forceDirectionX * force * this.density;
+                let directionY = forceDirectionY * force * this.density;
+
+                if (this.distance < maxDistance) {
+                    this.x -= directionX;
+                    this.y -= directionY;
+                } else {
+                    if (this.x !== this.baseX) {
+                        let dx = this.x - this.baseX;
+                        this.x -= dx / 10;
+                    }
+                    if (this.y !== this.baseY) {
+                        let dy = this.y - this.baseY;
+                        this.y -= dy / 10;
+                    }
+                }
+
+                this.baseX += this.vx;
+                this.baseY += this.vy;
+
+                if (this.baseX < 0 || this.baseX > heroCanvas.width) {
+                    this.vx = -this.vx;
+                    this.baseX = Math.max(0, Math.min(heroCanvas.width, this.baseX));
+                }
+                if (this.baseY < 0 || this.baseY > heroCanvas.height) {
+                    this.vy = -this.vy;
+                    this.baseY = Math.max(0, Math.min(heroCanvas.height, this.baseY));
+                }
+            }
+        }
+
+        let heroParticlesArray = [];
+        const numberOfHeroParticles = 100;
+
+        function initHero() {
+            heroParticlesArray = [];
+            for (let i = 0; i < numberOfHeroParticles; i++) {
+                heroParticlesArray.push(new HeroParticle());
+            }
+        }
+
+        function connectHeroParticles() {
+            for (let a = 0; a < heroParticlesArray.length; a++) {
+                for (let b = a; b < heroParticlesArray.length; b++) {
+                    let dx = heroParticlesArray[a].x - heroParticlesArray[b].x;
+                    let dy = heroParticlesArray[a].y - heroParticlesArray[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 100) {
+                        heroCtx.strokeStyle = `rgba(102, 126, 234, ${1 - distance / 100})`;
+                        heroCtx.lineWidth = 0.5;
+                        heroCtx.beginPath();
+                        heroCtx.moveTo(heroParticlesArray[a].x, heroParticlesArray[a].y);
+                        heroCtx.lineTo(heroParticlesArray[b].x, heroParticlesArray[b].y);
+                        heroCtx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateHero() {
+            heroCtx.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
+
+            for (let i = 0; i < heroParticlesArray.length; i++) {
+                heroParticlesArray[i].update();
+                heroParticlesArray[i].draw();
+            }
+            connectHeroParticles();
+            requestAnimationFrame(animateHero);
+        }
+
+        initHero();
+        animateHero();
+
+        heroCanvas.addEventListener('mousemove', (e) => {
+            const rect = heroCanvas.getBoundingClientRect();
+            heroMouse.x = e.clientX - rect.left;
+            heroMouse.y = e.clientY - rect.top;
+        });
+
+        // Grid Canvas Background for Content Sections
+        const projectsCanvas = document.getElementById('projectsCanvas');
+        const projectsCtx = projectsCanvas.getContext('2d');
+        const canvasWrapper = projectsCanvas.parentElement;
+        
+        function updateCanvasSize() {
+            projectsCanvas.width = window.innerWidth;
+            // Get the actual height of the wrapper div containing all content sections
+            projectsCanvas.height = canvasWrapper.offsetHeight;
+        }
+        
+        updateCanvasSize();
+
+        let gridMouse = { x: 0, y: 0 };
+        
+        document.addEventListener('mousemove', (e) => {
+            const wrapperRect = canvasWrapper.getBoundingClientRect();
+            gridMouse.x = e.clientX;
+            gridMouse.y = e.clientY - wrapperRect.top;
+        });
+
+        class GridNode {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.baseSize = 2;
+                this.size = this.baseSize;
+                this.maxSize = 8;
+            }
+
+            draw() {
+                const dx = gridMouse.x - this.x;
+                const dy = gridMouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const maxDistance = 200;
+
+                if (distance < maxDistance) {
+                    this.size = this.baseSize + (1 - distance / maxDistance) * this.maxSize;
+                    const opacity = 1 - distance / maxDistance;
+                    projectsCtx.fillStyle = `rgba(102, 126, 234, ${opacity * 0.8})`;
+                    projectsCtx.shadowBlur = 15;
+                    projectsCtx.shadowColor = 'rgba(102, 126, 234, 0.5)';
+                } else {
+                    this.size = this.baseSize;
+                    projectsCtx.fillStyle = 'rgba(102, 126, 234, 0.3)';
+                    projectsCtx.shadowBlur = 0;
+                }
+
+                projectsCtx.beginPath();
+                projectsCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                projectsCtx.fill();
+            }
+        }
+
+        const gridSpacing = 80;
+        let gridNodes = [];
+        
+        function initGrid() {
+            gridNodes = [];
+            for (let x = gridSpacing; x < projectsCanvas.width; x += gridSpacing) {
+                for (let y = gridSpacing; y < projectsCanvas.height; y += gridSpacing) {
+                    gridNodes.push(new GridNode(x, y));
+                }
+            }
+        }
+        
+        // Initialize after a short delay to ensure page is loaded
+        setTimeout(() => {
+            updateCanvasSize();
+            initGrid();
+        }, 100);
+
+        function animateGrid() {
+            projectsCtx.clearRect(0, 0, projectsCanvas.width, projectsCanvas.height);
+
+            // Draw grid lines
+            projectsCtx.strokeStyle = 'rgba(102, 126, 234, 0.1)';
+            projectsCtx.lineWidth = 1;
+            
+            for (let x = gridSpacing; x < projectsCanvas.width; x += gridSpacing) {
+                projectsCtx.beginPath();
+                projectsCtx.moveTo(x, 0);
+                projectsCtx.lineTo(x, projectsCanvas.height);
+                projectsCtx.stroke();
+            }
+            
+            for (let y = gridSpacing; y < projectsCanvas.height; y += gridSpacing) {
+                projectsCtx.beginPath();
+                projectsCtx.moveTo(0, y);
+                projectsCtx.lineTo(projectsCanvas.width, y);
+                projectsCtx.stroke();
+            }
+
+            // Draw nodes
+            gridNodes.forEach(node => node.draw());
+
+            requestAnimationFrame(animateGrid);
+        }
+
+        animateGrid();
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            heroCanvas.width = heroCanvas.offsetWidth;
+            heroCanvas.height = heroCanvas.offsetHeight;
+            initHero();
+
+            updateCanvasSize();
+            initGrid();
+        });
+        
+        // Also reinitialize on window load to ensure proper sizing
+        window.addEventListener('load', () => {
+            updateCanvasSize();
+            initGrid();
+        });
+    </script>
+</body>
+</html>
