@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City Cleanup | Jesse Zumstein</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+        }
+
+        nav a {
+            color: #a8b2d1;
+            text-decoration: none;
+            font-size: 1.05em;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #64ffda;
+        }
+
+        .hero-section {
+            padding: 150px 20px 80px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #heroCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            cursor: default;
+        }
+
+        h1::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle 150px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 255, 255, 0.8) 0%,
+                rgba(102, 126, 234, 0.6) 30%,
+                transparent 70%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        h1:hover::before {
+            opacity: 1;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #a8b2d1;
+            margin-bottom: 30px;
+        }
+
+        .cleanup-section {
+            background: #0f0f1e;
+            padding: 80px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #cleanupCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-title {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ccd6f6;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #8892b0;
+            font-size: 1.2em;
+            margin-bottom: 60px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .tally-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .tally-card {
+            background: linear-gradient(135deg, #1e1e3f 0%, #1a1a2e 100%);
+            padding: 35px;
+            border-radius: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .tally-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .tally-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .tally-label {
+            color: #64ffda;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .tally-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .tally-btn {
+            background: rgba(100, 255, 218, 0.1);
+            color: #64ffda;
+            border: 2px solid rgba(100, 255, 218, 0.3);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .tally-btn:hover {
+            background: rgba(100, 255, 218, 0.2);
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(100, 255, 218, 0.3);
+        }
+
+        .tally-btn:active {
+            transform: scale(0.95);
+        }
+
+        .tally-count {
+            font-size: 3em;
+            font-weight: 700;
+            color: #667eea;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .reset-btn {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+
+        .reset-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .submit-section {
+            background: linear-gradient(135deg, #1e1e3f 0%, #1a1a2e 100%);
+            padding: 50px;
+            border-radius: 25px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            margin-top: 60px;
+        }
+
+        .submit-section h2 {
+            font-size: 2em;
+            color: #64ffda;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #a8b2d1;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(26, 26, 46, 0.5);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 1.1em;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #64ffda;
+            box-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            background: rgba(100, 255, 218, 0.1);
+            border: 2px solid rgba(100, 255, 218, 0.3);
+            color: #64ffda;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .error-message {
+            background: rgba(255, 82, 82, 0.1);
+            border: 2px solid rgba(255, 82, 82, 0.3);
+            color: #ff5252;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .total-section {
+            background: linear-gradient(135deg, #1e1e3f 0%, #1a1a2e 100%);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .total-label {
+            color: #8892b0;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .total-value {
+            color: #64ffda;
+            font-size: 3em;
+            font-weight: 700;
+        }
+
+        footer {
+            background: #1a1a2e;
+            padding: 40px 20px;
+            text-align: center;
+            color: #8892b0;
+            border-top: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+
+            .tally-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .submit-section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">JZ</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <canvas id="heroCanvas"></canvas>
+        <div class="hero-content">
+            <h1 id="mainTitle" data-text="City Cleanup">City Cleanup</h1>
+            <p class="subtitle">Track your cleanup progress and make a difference!</p>
+        </div>
+    </section>
+
+    <section class="cleanup-section">
+        <canvas id="cleanupCanvas"></canvas>
+        <div class="container">
+            <h2 class="section-title">Track Your Collection</h2>
+            <p class="section-subtitle">Use the counters below to track each type of item you collect during the cleanup</p>
+
+            <div class="total-section">
+                <div class="total-label">Total Items Collected</div>
+                <div class="total-value" id="totalCount">0</div>
+            </div>
+
+            <div class="tally-grid">
+                <div class="tally-card">
+                    <div class="tally-icon">🍾</div>
+                    <div class="tally-label">Glass</div>
+                    <div class="tally-controls">
+                        <button class="tally-btn" onclick="decrement('glass')">−</button>
+                        <div class="tally-count" id="glass-count">0</div>
+                        <button class="tally-btn" onclick="increment('glass')">+</button>
+                    </div>
+                    <button class="reset-btn" onclick="reset('glass')">Reset</button>
+                </div>
+
+                <div class="tally-card">
+                    <div class="tally-icon">🥤</div>
+                    <div class="tally-label">Plastics</div>
+                    <div class="tally-controls">
+                        <button class="tally-btn" onclick="decrement('plastics')">−</button>
+                        <div class="tally-count" id="plastics-count">0</div>
+                        <button class="tally-btn" onclick="increment('plastics')">+</button>
+                    </div>
+                    <button class="reset-btn" onclick="reset('plastics')">Reset</button>
+                </div>
+
+                <div class="tally-card">
+                    <div class="tally-icon">🥫</div>
+                    <div class="tally-label">Aluminum</div>
+                    <div class="tally-controls">
+                        <button class="tally-btn" onclick="decrement('aluminum')">−</button>
+                        <div class="tally-count" id="aluminum-count">0</div>
+                        <button class="tally-btn" onclick="increment('aluminum')">+</button>
+                    </div>
+                    <button class="reset-btn" onclick="reset('aluminum')">Reset</button>
+                </div>
+
+                <div class="tally-card">
+                    <div class="tally-icon">⚠️</div>
+                    <div class="tally-label">Hazardous</div>
+                    <div class="tally-controls">
+                        <button class="tally-btn" onclick="decrement('hazardous')">−</button>
+                        <div class="tally-count" id="hazardous-count">0</div>
+                        <button class="tally-btn" onclick="increment('hazardous')">+</button>
+                    </div>
+                    <button class="reset-btn" onclick="reset('hazardous')">Reset</button>
+                </div>
+
+                <div class="tally-card">
+                    <div class="tally-icon">📄</div>
+                    <div class="tally-label">Paper</div>
+                    <div class="tally-controls">
+                        <button class="tally-btn" onclick="decrement('paper')">−</button>
+                        <div class="tally-count" id="paper-count">0</div>
+                        <button class="tally-btn" onclick="increment('paper')">+</button>
+                    </div>
+                    <button class="reset-btn" onclick="reset('paper')">Reset</button>
+                </div>
+
+                <div class="tally-card">
+                    <div class="tally-icon">🗑️</div>
+                    <div class="tally-label">Other</div>
+                    <div class="tally-controls">
+                        <button class="tally-btn" onclick="decrement('other')">−</button>
+                        <div class="tally-count" id="other-count">0</div>
+                        <button class="tally-btn" onclick="increment('other')">+</button>
+                    </div>
+                    <button class="reset-btn" onclick="reset('other')">Reset</button>
+                </div>
+            </div>
+
+            <div class="submit-section">
+                <h2>Submit Your Results</h2>
+                <form id="cleanupForm">
+                    <div class="form-group">
+                        <label for="participantName">Your Name</label>
+                        <input type="text" id="participantName" name="name" required placeholder="Enter your name">
+                    </div>
+                    <button type="submit" class="submit-btn" id="submitBtn">Submit Results</button>
+                    <div class="success-message" id="successMessage">
+                        ✓ Successfully submitted! Thank you for participating in the cleanup!
+                    </div>
+                    <div class="error-message" id="errorMessage">
+                        ✗ There was an error submitting your results. Please try again.
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 Jesse Zumstein. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Tally system
+        const counts = {
+            glass: 0,
+            plastics: 0,
+            aluminum: 0,
+            hazardous: 0,
+            paper: 0,
+            other: 0
+        };
+
+        function increment(type) {
+            counts[type]++;
+            updateDisplay(type);
+            updateTotal();
+        }
+
+        function decrement(type) {
+            if (counts[type] > 0) {
+                counts[type]--;
+                updateDisplay(type);
+                updateTotal();
+            }
+        }
+
+        function reset(type) {
+            counts[type] = 0;
+            updateDisplay(type);
+            updateTotal();
+        }
+
+        function updateDisplay(type) {
+            document.getElementById(`${type}-count`).textContent = counts[type];
+        }
+
+        function updateTotal() {
+            const total = Object.values(counts).reduce((sum, count) => sum + count, 0);
+            document.getElementById('totalCount').textContent = total;
+        }
+
+        // Interactive Title Effect
+        const mainTitle = document.getElementById('mainTitle');
+        
+        mainTitle.addEventListener('mousemove', (e) => {
+            const rect = mainTitle.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            mainTitle.style.setProperty('--mouse-x', `${x}%`);
+            mainTitle.style.setProperty('--mouse-y', `${y}%`);
+        });
+
+        // Hero Particle Canvas Animation
+        const heroCanvas = document.getElementById('heroCanvas');
+        const heroCtx = heroCanvas.getContext('2d');
+        
+        heroCanvas.width = heroCanvas.offsetWidth;
+        heroCanvas.height = heroCanvas.offsetHeight;
+
+        let heroMouse = {
+            x: heroCanvas.width / 2,
+            y: heroCanvas.height / 2
+        };
+
+        class HeroParticle {
+            constructor() {
+                this.x = Math.random() * heroCanvas.width;
+                this.y = Math.random() * heroCanvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1;
+                this.distance = 0;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+            }
+
+            draw() {
+                heroCtx.fillStyle = `rgba(102, 126, 234, ${1 - this.distance / 200})`;
+                heroCtx.beginPath();
+                heroCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                heroCtx.closePath();
+                heroCtx.fill();
+            }
+
+            update() {
+                let dx = heroMouse.x - this.x;
+                let dy = heroMouse.y - this.y;
+                this.distance = Math.sqrt(dx * dx + dy * dy);
+                let forceDirectionX = dx / this.distance;
+                let forceDirectionY = dy / this.distance;
+                let maxDistance = 150;
+                let force = (maxDistance - this.distance) / maxDistance;
+                let directionX = forceDirectionX * force * this.density;
+                let directionY = forceDirectionY * force * this.density;
+
+                if (this.distance < maxDistance) {
+                    this.x -= directionX;
+                    this.y -= directionY;
+                } else {
+                    if (this.x !== this.baseX) {
+                        let dx = this.x - this.baseX;
+                        this.x -= dx / 10;
+                    }
+                    if (this.y !== this.baseY) {
+                        let dy = this.y - this.baseY;
+                        this.y -= dy / 10;
+                    }
+                }
+
+                this.baseX += this.vx;
+                this.baseY += this.vy;
+
+                if (this.baseX < 0 || this.baseX > heroCanvas.width) {
+                    this.vx = -this.vx;
+                    this.baseX = Math.max(0, Math.min(heroCanvas.width, this.baseX));
+                }
+                if (this.baseY < 0 || this.baseY > heroCanvas.height) {
+                    this.vy = -this.vy;
+                    this.baseY = Math.max(0, Math.min(heroCanvas.height, this.baseY));
+                }
+            }
+        }
+
+        let heroParticlesArray = [];
+        const numberOfHeroParticles = 100;
+
+        function initHero() {
+            heroParticlesArray = [];
+            for (let i = 0; i < numberOfHeroParticles; i++) {
+                heroParticlesArray.push(new HeroParticle());
+            }
+        }
+
+        function connectHeroParticles() {
+            for (let a = 0; a < heroParticlesArray.length; a++) {
+                for (let b = a; b < heroParticlesArray.length; b++) {
+                    let dx = heroParticlesArray[a].x - heroParticlesArray[b].x;
+                    let dy = heroParticlesArray[a].y - heroParticlesArray[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 100) {
+                        heroCtx.strokeStyle = `rgba(102, 126, 234, ${1 - distance / 100})`;
+                        heroCtx.lineWidth = 0.5;
+                        heroCtx.beginPath();
+                        heroCtx.moveTo(heroParticlesArray[a].x, heroParticlesArray[a].y);
+                        heroCtx.lineTo(heroParticlesArray[b].x, heroParticlesArray[b].y);
+                        heroCtx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateHero() {
+            heroCtx.clearRect(0, 0, heroCanvas.width, heroCanvas.height);
+
+            for (let i = 0; i < heroParticlesArray.length; i++) {
+                heroParticlesArray[i].update();
+                heroParticlesArray[i].draw();
+            }
+            connectHeroParticles();
+            requestAnimationFrame(animateHero);
+        }
+
+        initHero();
+        animateHero();
+
+        heroCanvas.addEventListener('mousemove', (e) => {
+            const rect = heroCanvas.getBoundingClientRect();
+            heroMouse.x = e.clientX - rect.left;
+            heroMouse.y = e.clientY - rect.top;
+        });
+
+        // Cleanup Section Canvas Background
+        const cleanupCanvas = document.getElementById('cleanupCanvas');
+        const cleanupCtx = cleanupCanvas.getContext('2d');
+        const cleanupSection = cleanupCanvas.parentElement;
+        
+        function updateCleanupCanvasSize() {
+            cleanupCanvas.width = window.innerWidth;
+            cleanupCanvas.height = cleanupSection.offsetHeight;
+        }
+        
+        updateCleanupCanvasSize();
+
+        let cleanupMouse = { x: 0, y: 0 };
+        
+        cleanupSection.addEventListener('mousemove', (e) => {
+            const wrapperRect = cleanupSection.getBoundingClientRect();
+            cleanupMouse.x = e.clientX;
+            cleanupMouse.y = e.clientY - wrapperRect.top;
+        });
+
+        class CleanupGridNode {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.baseSize = 2;
+                this.size = this.baseSize;
+                this.maxSize = 8;
+            }
+
+            draw() {
+                const dx = cleanupMouse.x - this.x;
+                const dy = cleanupMouse.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const maxDistance = 200;
+
+                if (distance < maxDistance) {
+                    this.size = this.baseSize + (1 - distance / maxDistance) * this.maxSize;
+                    const opacity = 1 - distance / maxDistance;
+                    cleanupCtx.fillStyle = `rgba(102, 126, 234, ${opacity * 0.8})`;
+                    cleanupCtx.shadowBlur = 15;
+                    cleanupCtx.shadowColor = 'rgba(102, 126, 234, 0.5)';
+                } else {
+                    this.size = this.baseSize;
+                    cleanupCtx.fillStyle = 'rgba(102, 126, 234, 0.3)';
+                    cleanupCtx.shadowBlur = 0;
+                }
+
+                cleanupCtx.beginPath();
+                cleanupCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                cleanupCtx.fill();
+            }
+        }
+
+        const cleanupGridSpacing = 80;
+        let cleanupGridNodes = [];
+        
+        function initCleanupGrid() {
+            cleanupGridNodes = [];
+            for (let x = cleanupGridSpacing; x < cleanupCanvas.width; x += cleanupGridSpacing) {
+                for (let y = cleanupGridSpacing; y < cleanupCanvas.height; y += cleanupGridSpacing) {
+                    cleanupGridNodes.push(new CleanupGridNode(x, y));
+                }
+            }
+        }
+        
+        setTimeout(() => {
+            updateCleanupCanvasSize();
+            initCleanupGrid();
+        }, 100);
+
+        function animateCleanupGrid() {
+            cleanupCtx.clearRect(0, 0, cleanupCanvas.width, cleanupCanvas.height);
+
+            // Draw grid lines
+            cleanupCtx.strokeStyle = 'rgba(102, 126, 234, 0.1)';
+            cleanupCtx.lineWidth = 1;
+            
+            for (let x = cleanupGridSpacing; x < cleanupCanvas.width; x += cleanupGridSpacing) {
+                cleanupCtx.beginPath();
+                cleanupCtx.moveTo(x, 0);
+                cleanupCtx.lineTo(x, cleanupCanvas.height);
+                cleanupCtx.stroke();
+            }
+            
+            for (let y = cleanupGridSpacing; y < cleanupCanvas.height; y += cleanupGridSpacing) {
+                cleanupCtx.beginPath();
+                cleanupCtx.moveTo(0, y);
+                cleanupCtx.lineTo(cleanupCanvas.width, y);
+                cleanupCtx.stroke();
+            }
+
+            // Draw nodes
+            cleanupGridNodes.forEach(node => node.draw());
+
+            requestAnimationFrame(animateCleanupGrid);
+        }
+
+        animateCleanupGrid();
+
+        // Form submission
+        const form = document.getElementById('cleanupForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('participantName').value.trim();
+            
+            if (!name) {
+                errorMessage.textContent = 'Please enter your name before submitting.';
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+                return;
+            }
+
+            const total = Object.values(counts).reduce((sum, count) => sum + count, 0);
+            
+            if (total === 0) {
+                errorMessage.textContent = 'Please collect at least one item before submitting.';
+                errorMessage.style.display = 'block';
+                successMessage.style.display = 'none';
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+
+            // Prepare data
+            const formData = {
+                name: name,
+                timestamp: new Date().toISOString(),
+                glass: counts.glass,
+                plastics: counts.plastics,
+                aluminum: counts.aluminum,
+                hazardous: counts.hazardous,
+                paper: counts.paper,
+                other: counts.other,
+                total: total
+            };
+
+            try {
+                // IMPORTANT: Replace this URL with your Google Apps Script Web App URL
+                // See instructions below for setting up Google Sheets integration
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbwxbnz4-B85dkHHPEwprDOv2O0CIJG2DE3wt7ocCkwhwiAMIxQWSSda3EQxbKRil43_MA/exec';
+                
+                if (scriptURL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+                    // If no script URL is configured, show success message anyway
+                    // (for testing purposes)
+                    console.log('Form data:', formData);
+                    successMessage.style.display = 'block';
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Results';
+                    form.reset();
+                    // Reset all counts
+                    Object.keys(counts).forEach(key => {
+                        counts[key] = 0;
+                        updateDisplay(key);
+                    });
+                    updateTotal();
+                    return;
+                }
+
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                // Since we're using no-cors mode, we can't check the response
+                // Assume success if no error is thrown
+                successMessage.style.display = 'block';
+                form.reset();
+                
+                // Reset all counts
+                Object.keys(counts).forEach(key => {
+                    counts[key] = 0;
+                    updateDisplay(key);
+                });
+                updateTotal();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessage.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Results';
+            }
+        });
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            heroCanvas.width = heroCanvas.offsetWidth;
+            heroCanvas.height = heroCanvas.offsetHeight;
+            initHero();
+
+            updateCleanupCanvasSize();
+            initCleanupGrid();
+        });
+        
+        window.addEventListener('load', () => {
+            updateCleanupCanvasSize();
+            initCleanupGrid();
+        });
+    </script>
+</body>
+</html>
+
