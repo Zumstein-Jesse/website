@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Great Wall Training Plan | Jesse Zumstein</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+        }
+
+        nav a {
+            color: #a8b2d1;
+            text-decoration: none;
+            font-size: 1.05em;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #64ffda;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 120px 20px 80px;
+            position: relative;
+            z-index: 1;
+        }
+
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .header-section {
+            margin-bottom: 60px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+            padding-bottom: 30px;
+        }
+
+        .header-section h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            cursor: default;
+        }
+
+        .header-section h1::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle 150px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 255, 255, 0.8) 0%,
+                rgba(102, 126, 234, 0.6) 30%,
+                transparent 70%
+            );
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+
+        .header-section h1:hover::before {
+            opacity: 1;
+        }
+
+        .header-section .subtitle {
+            color: #a8b2d1;
+            font-size: 1.1em;
+        }
+
+        .settings-panel {
+            background: linear-gradient(135deg, #1e1e3f 0%, #1a1a2e 100%);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            display: none;
+        }
+
+        .settings-panel.active {
+            display: block;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .setting-group label {
+            display: block;
+            color: #8892b0;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .setting-group input {
+            background: #0a0a0a;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 1em;
+            width: 100%;
+            font-family: 'Courier New', monospace;
+        }
+
+        .setting-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .setting-group .help-text {
+            color: #52525b;
+            font-size: 0.8em;
+            margin-top: 8px;
+            line-height: 1.5;
+        }
+
+        .offset-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .offset-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            background: #0a0a0a;
+            color: #ffffff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s;
+        }
+
+        .offset-btn:hover {
+            background: #667eea;
+            border-color: #667eea;
+        }
+
+        .offset-value {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .btn-settings {
+            background: transparent;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            color: #a8b2d1;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .btn-settings:hover {
+            background: rgba(102, 126, 234, 0.2);
+            color: #ffffff;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .nav-tab {
+            background: none;
+            border: none;
+            color: #52525b;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            padding: 15px 0;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        .nav-tab:hover {
+            color: #a8b2d1;
+        }
+
+        .nav-tab.active {
+            color: #ffffff;
+        }
+
+        .nav-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #667eea;
+        }
+
+        .stats-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .stat-item {
+            flex: 0 0 auto;
+        }
+
+        .stat-label {
+            display: block;
+            color: #52525b;
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 3em;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .stat-value-small {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .workout-section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            color: #ffffff;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .workout-card {
+            padding: 25px 0;
+            display: flex;
+            gap: 30px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .workout-card:last-child {
+            border-bottom: none;
+        }
+
+        .workout-card.today {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .workout-meta {
+            min-width: 120px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .workout-day {
+            font-size: 0.75em;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64ffda;
+        }
+
+        .workout-type {
+            font-size: 0.75em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .workout-type.rest {
+            color: #52525b;
+        }
+
+        .workout-details {
+            flex: 1;
+        }
+
+        .workout-title {
+            font-size: 1.2em;
+            color: #ffffff;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .workout-title.rest {
+            color: #a8b2d1;
+        }
+
+        .workout-description {
+            color: #a8b2d1;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .workout-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.75em;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #52525b;
+        }
+
+        .workout-stats span.highlight {
+            color: #64ffda;
+        }
+
+        .schedule-view {
+            display: none;
+        }
+
+        .schedule-view.active {
+            display: block;
+        }
+
+        .week-item {
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .week-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 0;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .week-header:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .week-number {
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #52525b;
+            min-width: 50px;
+        }
+
+        .week-info {
+            flex: 1;
+            margin-left: 30px;
+        }
+
+        .week-theme {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .week-theme.race {
+            color: #64ffda;
+        }
+
+        .week-date {
+            font-size: 0.75em;
+            font-family: 'Courier New', monospace;
+            color: #52525b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .week-toggle {
+            font-size: 1.5em;
+            color: #52525b;
+            transition: transform 0.3s, color 0.3s;
+        }
+
+        .week-header:hover .week-toggle {
+            color: #ffffff;
+        }
+
+        .week-toggle.expanded {
+            transform: rotate(45deg);
+        }
+
+        .week-days {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+
+        .week-days.expanded {
+            max-height: 3000px;
+        }
+
+        .week-days-content {
+            padding-left: 80px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #52525b;
+            border: 1px dashed rgba(102, 126, 234, 0.3);
+            border-radius: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 100px 15px 60px;
+            }
+
+            .stats-grid {
+                gap: 25px;
+            }
+
+            .stat-value {
+                font-size: 2em;
+            }
+
+            .workout-card {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .workout-meta {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .week-days-content {
+                padding-left: 0;
+            }
+
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">JZ</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <canvas id="particleCanvas"></canvas>
+
+    <div class="main-content">
+        <div class="header-section">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
+                <div>
+                    <h1 id="mainTitle" data-text="GREAT WALL TRAINER">GREAT WALL TRAINER</h1>
+                    <p class="subtitle">MAY 17, 2026 • PROTOCOL 21</p>
+                </div>
+                <button class="btn-settings" id="settingsBtn">Plan Settings</button>
+            </div>
+
+            <div class="settings-panel" id="settingsPanel">
+                <div class="settings-grid">
+                    <div class="setting-group">
+                        <label>Goal Marathon Pace</label>
+                        <input type="text" id="goalPace" value="9:00" placeholder="9:00">
+                        <span class="help-text">Used to calculate training zones (Easy, Tempo, Speed).</span>
+                    </div>
+                    <div class="setting-group">
+                        <label>Schedule Shift</label>
+                        <div class="offset-controls">
+                            <button class="offset-btn" id="offsetDecrease">-</button>
+                            <span class="offset-value" id="offsetValue">+0</span>
+                            <button class="offset-btn" id="offsetIncrease">+</button>
+                        </div>
+                        <span class="help-text">Use <strong>+</strong> to advance (skip) weeks.<br>Use <strong>-</strong> to delay (repeat) weeks.<br><span style="color: #64ffda;">Tip: Use this to utilize the Buffer Week (W10) or recover from sickness.</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-view="today">Current Brief</button>
+            <button class="nav-tab" data-view="schedule">Master Plan</button>
+        </div>
+
+        <div id="todayView" class="view-content">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">Days To Go</span>
+                    <span class="stat-value" id="daysUntilRace">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Current Phase</span>
+                    <span class="stat-value-small" id="currentPhase">-</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Week</span>
+                    <span class="stat-value-small" id="currentWeek">- <span style="color: #52525b; font-size: 0.7em;">/ 21</span></span>
+                </div>
+            </div>
+
+            <div class="workout-section">
+                <h3 class="section-title">Today's Directive</h3>
+                <div id="todayWorkout"></div>
+            </div>
+
+            <div class="workout-section">
+                <h3 class="section-title" id="restOfWeekTitle">Rest of Week</h3>
+                <div id="restOfWeek"></div>
+            </div>
+        </div>
+
+        <div id="scheduleView" class="schedule-view">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 1px solid rgba(102, 126, 234, 0.2);">
+                <h3 class="section-title" style="margin: 0; border: none; padding: 0;">Training Blocks</h3>
+                <span style="font-size: 0.75em; font-family: 'Courier New', monospace; color: #52525b; text-transform: uppercase; letter-spacing: 1px;">TOTAL: 21 WEEKS</span>
+            </div>
+            <div id="scheduleContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Training Plan Data
+        const RACE_DATE_STR = "2026-05-17";
+        const STATIC_PLAN = {
+            generatedAt: new Date().toISOString(),
+            weeks: [
+                // PHASE 1: FOUNDATION (Weeks 1-4)
+                {
+                    weekNumber: 1,
+                    theme: "Phase 1: Foundation - Gentle Entry",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "2x12 Bodyweight Squats, 2x10 Lunges (each leg), 2x15 Calf Raises, 2x10 Step-ups (each leg), 2x12 Glute Bridges, 2x30s Plank. Focus on form and movement quality.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Just easy miles to get started. Pace: {EASY}. Start conservatively.", distanceMiles: 3 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stair Introduction", description: "15 mins StairMaster or stadium stairs. Very easy pace (Zone 1-2). Target: 500-700 steps. Just getting familiar with the movement.", durationMinutes: 15, stairsFocus: true },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "2x10 Pushups, 2x12 Rows, 2x15 Glute Bridges, 2x12 Deadbugs, 2x10 Bird-Dogs (each side), 15 min Yoga. Gentle introduction.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}. Keep it very comfortable.", distanceMiles: 2 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady, comfortable effort. Focus on time on feet and building the habit. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 2,
+                    theme: "Phase 1: Consistency",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x12 Squats, 3x12 Step-ups (weighted), 3x15 Calf Raises, 3x10 Bulgarian Split Squats (each leg), 3x12 Hip Thrusts, 3x60s Plank.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Speed Play", description: "1mi Warmup, 6x1min fast @ {SPEED} / 2min easy, 1mi Cooldown.", distanceMiles: 4 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stair Endurance", description: "25 mins StairMaster. Steady pace. Target: 1200 steps.", durationMinutes: 25, stairsFocus: true },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x10 Overhead Press, 3x12 Rows, 3x12 Deadbugs, 3x10 Single Leg RDL (each leg), 3x15 Side Planks (each side), 15 min Stretching.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 7 },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 3,
+                    theme: "Phase 1: Build",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x12 Squats, 3x10 Bulgarian Split Squats (each leg), 3x20 Calf Raises, 3x12 Reverse Lunges, 3x10 Wall Sits (45s hold), Core circuit: Planks, Russian Twists, Bicycle Crunches.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Tempo Run", description: "1mi Warmup, 2mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 4 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stair Intervals", description: "30 mins total. 1 min hard / 1 min easy intervals.", durationMinutes: 30, stairsFocus: true },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x10 Pushups, 3x12 Bent-over Rows, 3x10 Shoulder Press, 3x15 Glute Bridges, 3x12 Deadbugs, 20 min Yoga for hips.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 8 },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 4,
+                    theme: "Phase 1: Recovery",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x15 Bodyweight Squats, 3x12 Reverse Lunges, 3x15 Calf Raises, 3x10 Single Leg Glute Bridges (each leg), 3x30s Wall Sits, extensive mobility work.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Just easy miles. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Cross Train", description: "30 mins cycling or swimming (low impact).", durationMinutes: 30 },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x45s Planks, 3x30s Side Planks (each side), 3x10 Bird-Dogs (each side), 3x15 Deadbugs, 3x12 Russian Twists, 10 min stretching.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 5 },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                // PHASE 2: STRENGTH & HILLS (Weeks 5-8)
+                {
+                    weekNumber: 5,
+                    theme: "Phase 2: Hills",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "4x10 Heavy Squats, 3x10 Box Jumps, 4x15 Calf Raises, 3x10 Bulgarian Split Squats (each leg), 3x12 Romanian Deadlifts, 3x60s Plank.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Hill Repeats", description: "Warmup, 8x45sec hill sprints (Run up hard, walk down), Cooldown.", distanceMiles: 4 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stair Power", description: "30 mins stairs. Wear a weighted vest (10-15lbs) if possible.", durationMinutes: 30, stairsFocus: true },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "4x10 Deadlifts (moderate weight), 3x12 Rows, 3x10 Overhead Press, 3x15 Glute Bridges, 3x12 Deadbugs, Core focus: Planks, Side Planks, Russian Twists.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 9, stairsFocus: true },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 6,
+                    theme: "Phase 2: Volume",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "4x10 Squats, 3x12 Lunges (each leg), 4x20 Calf Raises (seated & standing), 3x10 Step-ups (weighted), 3x12 Hip Thrusts, 3x60s Wall Sits.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Threshold", description: "1mi Warmup, 3mi @ {TEMPO} continuous, 1mi Cooldown.", distanceMiles: 5 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stair Endurance", description: "40 mins continuous stairs. Zone 2/3 heart rate.", durationMinutes: 40, stairsFocus: true },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "Full body circuit: 3x12 Pushups, 3x12 Rows, 3x15 Kettlebell Swings, 3x10 Overhead Press, 3x15 Glute Bridges, 3x12 Deadbugs.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 10 },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 7,
+                    theme: "Phase 2: Power",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "4x8 Squats (Heavier), 3x8 Step-ups (weighted), 3x10 Plyometric Lunges (each leg), 3x10 Bulgarian Split Squats, 3x12 Romanian Deadlifts, 3x20 Calf Raises.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Long Intervals", description: "1mi Warmup, 3x1mi @ {TEMPO} w/ 2min rest, Cooldown.", distanceMiles: 6 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Mixed Climb", description: "30 mins stairs + 15 mins incline treadmill walking (15%).", durationMinutes: 45, stairsFocus: true },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "Posterior chain focus: 4x10 Romanian Deadlifts, 3x15 Glute Bridges, 3x12 Back Extensions, 3x10 Single Leg RDL (each leg), 3x12 Deadbugs, 3x60s Plank.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 12, stairsFocus: true },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 8,
+                    theme: "Phase 2: Recovery",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x15 Bodyweight Squats, 3x12 Reverse Lunges, 3x15 Calf Raises, 3x10 Clamshells (each side), 3x12 Leg Raises, mobility and light resistance bands.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Fartlek", description: "4 miles easy with 5x1min pickups.", distanceMiles: 4 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Easy Climb", description: "20 mins stairs very slow.", durationMinutes: 20, stairsFocus: true },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x45s Planks, 3x12 Deadbugs, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 3x30s Side Planks (each side), 20 min Yoga.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 8 },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                // PHASE 3: PEAK TRAINING (Weeks 9-16)
+                {
+                    weekNumber: 9,
+                    theme: "Phase 3: Endurance",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "Maintenance lifting: 3x10 Squats, 3x10 Lunges (each leg), 3x15 Calf Raises, 3x12 Step-ups, 3x10 Romanian Deadlifts, 3x60s Plank.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Yasso 800s", description: "Warmup, 6x800m @ {SPEED} (rest time = run time), Cooldown.", distanceMiles: 6 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stair Volume", description: "45 mins stairs. Find a rhythm. Target: 2500+ steps.", durationMinutes: 45, stairsFocus: true },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x60s Planks, 3x15 Deadbugs, 3x12 Russian Twists, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 10 mins continuous ab work.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 5 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 13 },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 10,
+                    theme: "BUFFER WEEK",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "Optional light strength: 3x12 Bodyweight Squats, 3x10 Reverse Lunges, 3x15 Calf Raises, 3x10 Glute Bridges, 3x30s Wall Sits, or rest.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Buffer Run", description: "Optional 3-4 miles easy if healthy.", distanceMiles: 4 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Buffer Cross", description: "Walk or Swim.", durationMinutes: 30 },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x30s Planks, 3x10 Deadbugs, 3x10 Bird-Dogs, 3x12 Glute Bridges, 3x30s Side Planks, stretch / massage.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 0 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 6 },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 11,
+                    theme: "Phase 3: Load",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x10 Squats, 3x10 Deadlifts, 3x20 Calf Raises, 3x12 Step-ups (weighted), 3x10 Bulgarian Split Squats (each leg), 3x60s Plank.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Tempo Build", description: "1mi Warmup, 4mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 6 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stair Intervals", description: "50 mins. 5 min warmup, 5x(3min Hard/2min Easy), Cooldown.", durationMinutes: 50, stairsFocus: true },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "Upper body push/pull: 3x12 Pushups, 3x12 Rows, 3x10 Overhead Press, 3x15 Glute Bridges, 3x12 Deadbugs, 3x45s Side Planks (each side).", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 5 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 14, stairsFocus: true },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 12,
+                    theme: "Phase 3: Threshold",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x10 Squats, 3x10 Box Jumps, 3x12 Step-ups, 3x15 Calf Raises, 3x10 Romanian Deadlifts, 3x60s Wall Sits.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Mile Repeats", description: "Warmup, 4x1mi @ {SPEED} w/ 3min rest, Cooldown.", distanceMiles: 7 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Hour of Power", description: "60 mins continuous StairMaster/Stairs. Mental resilience test.", durationMinutes: 60, stairsFocus: true },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "Core stability: 3x60s Planks, 3x30s Side Planks (each side), 3x12 Deadbugs, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 3x12 Russian Twists.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 5 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 15 },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 13,
+                    theme: "Phase 3: Recovery",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x15 Bodyweight Squats, 3x12 Reverse Lunges, 3x15 Calf Raises, 3x10 Single Leg Glute Bridges, 3x30s Wall Sits, yoga / foam roll.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Just miles. Pace: {EASY}.", distanceMiles: 5 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Easy Cross", description: "30 mins bike.", durationMinutes: 30 },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "Light core: 3x45s Planks, 3x12 Deadbugs, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 3x30s Side Planks (each side), 10 min stretching.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 10 },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 14,
+                    theme: "Phase 3: Peak 1",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "Maintenance lifting (lighter weights): 3x10 Squats, 3x10 Lunges (each leg), 3x15 Calf Raises, 3x12 Step-ups, 3x10 Romanian Deadlifts, 3x60s Plank.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Hill Circuits", description: "Run 0.5mi, Hill Sprint 1min, 20 Squats, Repeat x 5.", distanceMiles: 6 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stair Challenge", description: "60 mins stairs. Try to simulate race gear (wear your pack).", durationMinutes: 60, stairsFocus: true },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x45s Planks, 3x12 Deadbugs, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 3x30s Side Planks (each side), 20 min mobility work.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 5 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 17, stairsFocus: true },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 15,
+                    theme: "Phase 3: Peak 2",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "Maintenance lifting: 3x10 Squats, 3x10 Lunges (each leg), 3x15 Calf Raises, 3x12 Step-ups, 3x10 Romanian Deadlifts, 3x60s Plank.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Speed Tune", description: "Warmup, 10x400m @ {SPEED} w/ 90s rest, Cooldown.", distanceMiles: 7 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Leg Drain", description: "45 mins stairs immediately followed by 15 min lunges/squats.", durationMinutes: 60, stairsFocus: true },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "Core: 3x60s Planks, 3x12 Deadbugs, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 3x12 Russian Twists, 3x30s Side Planks (each side).", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 5 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 19, stairsFocus: true },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 16,
+                    theme: "Phase 3: Peak 3",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "Light weights: 3x10 Squats, 3x10 Lunges (each leg), 3x15 Calf Raises, 3x12 Step-ups, 3x10 Romanian Deadlifts, 3x60s Plank.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Tempo", description: "1mi Warmup, 5mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 7 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Final Stair Long", description: "70 mins stairs. This is your max stair duration.", durationMinutes: 70, stairsFocus: true },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x45s Planks, 3x12 Deadbugs, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 3x30s Side Planks (each side), 20 min stretching.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 5 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 20, stairsFocus: true },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                // PHASE 4: TAPER (Weeks 17-21)
+                {
+                    weekNumber: 17,
+                    theme: "Taper: Cutback",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "Bodyweight strength only: 3x15 Bodyweight Squats, 3x12 Reverse Lunges, 3x15 Calf Raises, 3x10 Single Leg Glute Bridges (each leg), 3x30s Wall Sits.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Intervals", description: "Warmup, 4x800m @ {SPEED}, Cooldown.", distanceMiles: 5 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stairs Taper", description: "40 mins steady.", durationMinutes: 40, stairsFocus: true },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x45s Planks, 3x12 Deadbugs, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 3x30s Side Planks (each side), 20 min yoga.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 13 },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 18,
+                    theme: "Taper: Sharpen",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x15 Bodyweight Squats, 3x12 Reverse Lunges, 3x15 Calf Raises, 3x10 Glute Bridges, 3x30s Wall Sits, 20 min mobility work.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Fartlek", description: "4 miles with 4x1min pickups.", distanceMiles: 4 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stairs Taper", description: "30 mins easy.", durationMinutes: 30, stairsFocus: true },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "Core: 3x45s Planks, 3x12 Deadbugs, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 3x30s Side Planks (each side).", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 10 },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 19,
+                    theme: "Taper: Rest",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x12 Bodyweight Squats, 3x10 Reverse Lunges, 3x15 Calf Raises, 3x10 Glute Bridges, 3x30s Wall Sits, or rest.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Marathon Pace", description: "2mi Warmup, 2mi @ {MP}, 1mi Cooldown.", distanceMiles: 5 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Walk", description: "30 min walk.", durationMinutes: 30 },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x30s Planks, 3x10 Deadbugs, 3x10 Bird-Dogs, 3x12 Glute Bridges, 3x30s Side Planks, or rest.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 8 },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 20,
+                    theme: "Taper: Final Prep",
+                    days: [
+                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x10 Bodyweight Squats, 3x10 Reverse Lunges, 3x15 Calf Raises, 3x10 Glute Bridges, 3x30s Wall Sits, or rest/packing.", durationMinutes: 60 },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Shakeout", description: "3 miles easy @ {EASY}.", distanceMiles: 3 },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Rest", description: "Final packing & prep.", durationMinutes: 0 },
+                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x30s Planks, 3x10 Deadbugs, 3x10 Bird-Dogs, 3x12 Glute Bridges, 3x30s Side Planks, 20 min mobility work.", durationMinutes: 60 },
+                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 2 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 0 },
+                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                    ]
+                },
+                {
+                    weekNumber: 21,
+                    theme: "TRAVEL & RACE",
+                    days: [
+                        { dayName: "Monday", workoutType: "Rest", title: "Depart for China", description: "Travel Day. Hydrate well on flight." },
+                        { dayName: "Tuesday", workoutType: "Rest", title: "In Transit", description: "Travel Day. Move legs in aisle when possible." },
+                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Arrival in China", description: "Land in China. Light walking to shake out legs. Hydrate." },
+                        { dayName: "Thursday", workoutType: "Run", title: "Wall Visit / Shakeout", description: "Acclimatization. 2-3 miles very easy, preferably near the wall.", distanceMiles: 3, durationMinutes: 30 },
+                        { dayName: "Friday", workoutType: "Rest", title: "Rest & Gear Check", description: "Organize race kit. Pin bib number." },
+                        { dayName: "Saturday", workoutType: "Rest", title: "Rest", description: "Carb load. Early dinner. Sleep." },
+                        { dayName: "Sunday", workoutType: "Long Run", title: "RACE DAY", description: "THE GREAT WALL MARATHON. Good luck!", distanceMiles: 26.2, stairsFocus: true }
+                    ]
+                }
+            ]
+        };
+
+        // Pace calculation utilities
+        function parsePaceToSeconds(paceStr) {
+            const parts = paceStr.split(':');
+            if (parts.length !== 2) return 540; // Default 9:00 if invalid
+            const minutes = parseInt(parts[0], 10);
+            const seconds = parseInt(parts[1], 10);
+            return (minutes * 60) + seconds;
+        }
+
+        function formatSecondsToPace(totalSeconds) {
+            const minutes = Math.floor(totalSeconds / 60);
+            const seconds = Math.round(totalSeconds % 60);
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function calculateTrainingPaces(goalPaceStr) {
+            const goalSeconds = parsePaceToSeconds(goalPaceStr);
+            return {
+                race: goalPaceStr,
+                easy: formatSecondsToPace(goalSeconds + 105),
+                long: formatSecondsToPace(goalSeconds + 75),
+                tempo: formatSecondsToPace(goalSeconds - 20),
+                speed: formatSecondsToPace(goalSeconds - 50),
+            };
+        }
+
+        function injectPace(text, paces) {
+            return text
+                .replace(/{MP}/g, `${paces.race}/mi`)
+                .replace(/{EASY}/g, `${paces.easy}/mi`)
+                .replace(/{LONG}/g, `${paces.long}/mi`)
+                .replace(/{TEMPO}/g, `${paces.tempo}/mi`)
+                .replace(/{SPEED}/g, `${paces.speed}/mi`);
+        }
+
+        // App State
+        let currentDate = new Date();
+        let goalPaceStr = localStorage.getItem('gw_pace') || "9:00";
+        let weekOffset = parseInt(localStorage.getItem('gw_offset') || "0", 10);
+        let paces = calculateTrainingPaces(goalPaceStr);
+        let view = 'today';
+
+        // Initialize
+        const raceDate = new Date(RACE_DATE_STR);
+        // Plan starts on December 8, 2025 for a gentle entry
+        // Parse date explicitly to avoid timezone issues: "2025-12-08" -> Dec 8, 2025 at local midnight
+        function getEffectivePlanStartDate() {
+            const [year, month, day] = "2025-12-08".split('-').map(Number);
+            const standardPlanStartDate = new Date(year, month - 1, day); // month is 0-indexed
+            const effective = new Date(standardPlanStartDate);
+            effective.setDate(effective.getDate() + (weekOffset * 7));
+            return effective;
+        }
+
+        // Get current workout
+        function getCurrentWorkout() {
+            const effectiveStart = getEffectivePlanStartDate();
+            // Normalize dates to midnight to avoid timezone issues
+            const startMidnight = new Date(effectiveStart.getFullYear(), effectiveStart.getMonth(), effectiveStart.getDate());
+            const todayMidnight = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+            const diffTime = todayMidnight.getTime() - startMidnight.getTime();
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays < 0) {
+                return {
+                    day: STATIC_PLAN.weeks[0].days[0],
+                    week: STATIC_PLAN.weeks[0],
+                    dayIndex: 0,
+                    dateStr: effectiveStart.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+                };
+            }
+            
+            const weekIndex = Math.floor(diffDays / 7);
+            const dayIndexInWeek = diffDays % 7;
+
+            if (weekIndex >= STATIC_PLAN.weeks.length) return null;
+
+            const currentWeek = STATIC_PLAN.weeks[weekIndex];
+            const currentDay = currentWeek.days[dayIndexInWeek] || currentWeek.days[0];
+
+            const actualDate = new Date(effectiveStart);
+            actualDate.setDate(actualDate.getDate() + (weekIndex * 7) + dayIndexInWeek);
+
+            return {
+                day: currentDay,
+                week: currentWeek,
+                dayIndex: dayIndexInWeek,
+                dateStr: actualDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
+            };
+        }
+
+        // Render workout card
+        function renderWorkoutCard(day, isToday = false, dateStr = null) {
+            const isRest = day.workoutType === "Rest" || day.workoutType === "Buffer";
+            const descriptionWithPace = injectPace(day.description, paces);
+            const dayName = dateStr ? dateStr.split(',')[0] : day.dayName.substring(0, 3);
+            
+            let stats = [];
+            if (day.distanceMiles) stats.push(`${day.distanceMiles} Miles`);
+            if (day.durationMinutes) stats.push(`${day.durationMinutes} Mins`);
+            if (day.stairsFocus) stats.push(`<span class="highlight">• Stairs Focus</span>`);
+
+            return `
+                <div class="workout-card ${isToday ? 'today' : ''}">
+                    <div class="workout-meta">
+                        <span class="workout-day">${dayName}</span>
+                        <span class="workout-type ${isRest ? 'rest' : ''}">${day.workoutType}</span>
+                    </div>
+                    <div class="workout-details">
+                        <h4 class="workout-title ${isRest ? 'rest' : ''}">${day.title}</h4>
+                        <p class="workout-description">${descriptionWithPace}</p>
+                        ${stats.length > 0 && !isRest ? `<div class="workout-stats">${stats.join(' ')}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Update today view
+        function updateTodayView() {
+            const currentStatus = getCurrentWorkout();
+            const daysUntilRace = Math.ceil((raceDate.getTime() - currentDate.getTime()) / (1000 * 3600 * 24));
+
+            document.getElementById('daysUntilRace').textContent = daysUntilRace;
+            document.getElementById('currentPhase').textContent = currentStatus ? currentStatus.week.theme.split(':')[0] : "Complete";
+            document.getElementById('currentWeek').innerHTML = currentStatus ? `${currentStatus.week.weekNumber} <span style="color: #52525b; font-size: 0.7em;">/ 21</span>` : "-";
+
+            const todayWorkoutEl = document.getElementById('todayWorkout');
+            if (currentStatus) {
+                todayWorkoutEl.innerHTML = renderWorkoutCard(currentStatus.day, true, currentStatus.dateStr);
+            } else {
+                todayWorkoutEl.innerHTML = '<div class="empty-state">TRAINING COMPLETE</div>';
+            }
+
+            const restOfWeekEl = document.getElementById('restOfWeek');
+            const restOfWeekTitle = document.getElementById('restOfWeekTitle');
+            if (currentStatus) {
+                restOfWeekTitle.textContent = `Rest of Week ${currentStatus.week.weekNumber}`;
+                const restDays = currentStatus.week.days.filter((_, i) => i !== currentStatus.dayIndex);
+                restOfWeekEl.innerHTML = restDays.map(d => renderWorkoutCard(d)).join('');
+            } else {
+                restOfWeekEl.innerHTML = '';
+            }
+        }
+
+        // Update schedule view
+        function updateScheduleView() {
+            const scheduleContent = document.getElementById('scheduleContent');
+            let html = '';
+            const effectiveStart = getEffectivePlanStartDate();
+
+            STATIC_PLAN.weeks.forEach((week, index) => {
+                const start = new Date(effectiveStart);
+                start.setDate(start.getDate() + (index * 7));
+                const end = new Date(start);
+                end.setDate(end.getDate() + 6);
+                const dateRange = `${start.toLocaleDateString('en-US', { month: 'short', day: '2-digit' })} — ${end.toLocaleDateString('en-US', { month: 'short', day: '2-digit' })}`;
+                const isRace = week.theme.toUpperCase().includes('RACE');
+
+                html += `
+                    <div class="week-item">
+                        <div class="week-header" onclick="toggleWeek(${week.weekNumber})">
+                            <span class="week-number">${String(week.weekNumber).padStart(2, '0')}</span>
+                            <div class="week-info">
+                                <div class="week-theme ${isRace ? 'race' : ''}">${week.theme}</div>
+                                <div class="week-date">${dateRange}</div>
+                            </div>
+                            <span class="week-toggle" id="toggle-${week.weekNumber}">+</span>
+                        </div>
+                        <div class="week-days" id="week-${week.weekNumber}">
+                            <div class="week-days-content">
+                                ${week.days.map(d => renderWorkoutCard(d)).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            scheduleContent.innerHTML = html;
+        }
+
+        function toggleWeek(weekNum) {
+            const weekDays = document.getElementById(`week-${weekNum}`);
+            const toggle = document.getElementById(`toggle-${weekNum}`);
+            const isExpanded = weekDays.classList.contains('expanded');
+            
+            if (isExpanded) {
+                weekDays.classList.remove('expanded');
+                toggle.classList.remove('expanded');
+            } else {
+                weekDays.classList.add('expanded');
+                toggle.classList.add('expanded');
+            }
+        }
+
+        // Event listeners
+        document.getElementById('settingsBtn').addEventListener('click', () => {
+            const panel = document.getElementById('settingsPanel');
+            panel.classList.toggle('active');
+            document.getElementById('settingsBtn').textContent = panel.classList.contains('active') ? 'Close Settings' : 'Plan Settings';
+        });
+
+        document.getElementById('goalPace').addEventListener('input', (e) => {
+            goalPaceStr = e.target.value;
+            localStorage.setItem('gw_pace', goalPaceStr);
+            paces = calculateTrainingPaces(goalPaceStr);
+            updateTodayView();
+            updateScheduleView();
+        });
+
+        document.getElementById('offsetIncrease').addEventListener('click', () => {
+            weekOffset++;
+            localStorage.setItem('gw_offset', weekOffset.toString());
+            updateOffsetDisplay();
+            updateTodayView();
+            updateScheduleView();
+        });
+
+        document.getElementById('offsetDecrease').addEventListener('click', () => {
+            weekOffset--;
+            localStorage.setItem('gw_offset', weekOffset.toString());
+            updateOffsetDisplay();
+            updateTodayView();
+            updateScheduleView();
+        });
+
+        function updateOffsetDisplay() {
+            const offsetValue = document.getElementById('offsetValue');
+            offsetValue.textContent = weekOffset > 0 ? `-${weekOffset}` : `+${Math.abs(weekOffset)}`;
+        }
+
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                const targetView = e.target.dataset.view;
+                view = targetView;
+                
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                document.getElementById('todayView').style.display = targetView === 'today' ? 'block' : 'none';
+                document.getElementById('scheduleView').classList.toggle('active', targetView === 'schedule');
+                
+                if (targetView === 'schedule') {
+                    updateScheduleView();
+                }
+            });
+        });
+
+        // Initialize
+        document.getElementById('goalPace').value = goalPaceStr;
+        updateOffsetDisplay();
+        updateTodayView();
+
+        // Particle Canvas Animation
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let mouse = {
+            x: canvas.width / 2,
+            y: canvas.height / 2
+        };
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 3 + 1;
+                this.baseX = this.x;
+                this.baseY = this.y;
+                this.density = (Math.random() * 30) + 1;
+                this.distance = 0;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(102, 126, 234, ${1 - this.distance / 200})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            update() {
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                this.distance = Math.sqrt(dx * dx + dy * dy);
+                let forceDirectionX = dx / this.distance;
+                let forceDirectionY = dy / this.distance;
+                let maxDistance = 150;
+                let force = (maxDistance - this.distance) / maxDistance;
+                let directionX = forceDirectionX * force * this.density;
+                let directionY = forceDirectionY * force * this.density;
+
+                if (this.distance < maxDistance) {
+                    this.x -= directionX;
+                    this.y -= directionY;
+                } else {
+                    if (this.x !== this.baseX) {
+                        let dx = this.x - this.baseX;
+                        this.x -= dx / 10;
+                    }
+                    if (this.y !== this.baseY) {
+                        let dy = this.y - this.baseY;
+                        this.y -= dy / 10;
+                    }
+                }
+
+                // Drift
+                this.baseX += this.vx;
+                this.baseY += this.vy;
+
+                // Boundaries
+                if (this.baseX < 0 || this.baseX > canvas.width) {
+                    this.vx = -this.vx;
+                    this.baseX = Math.max(0, Math.min(canvas.width, this.baseX));
+                }
+                if (this.baseY < 0 || this.baseY > canvas.height) {
+                    this.vy = -this.vy;
+                    this.baseY = Math.max(0, Math.min(canvas.height, this.baseY));
+                }
+            }
+        }
+
+        // Create particles
+        let particlesArray = [];
+        const numberOfParticles = 150;
+
+        function init() {
+            particlesArray = [];
+            for (let i = 0; i < numberOfParticles; i++) {
+                particlesArray.push(new Particle());
+            }
+        }
+
+        // Connect particles
+        function connect() {
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let dx = particlesArray[a].x - particlesArray[b].x;
+                    let dy = particlesArray[a].y - particlesArray[b].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance < 100) {
+                        ctx.strokeStyle = `rgba(102, 126, 234, ${1 - distance / 100})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Animation loop
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            connect();
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        // Mouse move event
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        // Resize event
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            init();
+        });
+
+        // Touch support for mobile
+        window.addEventListener('touchmove', (e) => {
+            mouse.x = e.touches[0].clientX;
+            mouse.y = e.touches[0].clientY;
+        });
+
+        // Interactive Title Effect
+        const mainTitle = document.getElementById('mainTitle');
+        
+        if (mainTitle) {
+            mainTitle.addEventListener('mousemove', (e) => {
+                const rect = mainTitle.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                
+                mainTitle.style.setProperty('--mouse-x', `${x}%`);
+                mainTitle.style.setProperty('--mouse-y', `${y}%`);
+            });
+        }
+    </script>
+</body>
+</html>
+
