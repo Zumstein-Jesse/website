@@ -74,7 +74,8 @@
             z-index: 1;
         }
 
-        #particleCanvas {
+        /* Mobile-friendly animated background */
+        .bg-animation {
             position: fixed;
             top: 0;
             left: 0;
@@ -82,6 +83,193 @@
             height: 100%;
             z-index: 0;
             pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bg-animation::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(100, 255, 218, 0.05) 0%, transparent 50%);
+            animation: gradientShift 20s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .geometric-shape {
+            position: absolute;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 50%;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: -5%;
+            animation-delay: 0s;
+            animation-duration: 25s;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: -5%;
+            animation-delay: -5s;
+            animation-duration: 20s;
+        }
+
+        .shape-3 {
+            width: 150px;
+            height: 150px;
+            top: 30%;
+            right: 20%;
+            animation-delay: -10s;
+            animation-duration: 22s;
+        }
+
+        .shape-4 {
+            width: 100px;
+            height: 100px;
+            bottom: 20%;
+            left: 15%;
+            animation-delay: -7s;
+            animation-duration: 18s;
+        }
+
+        .shape-5 {
+            width: 80px;
+            height: 80px;
+            top: 70%;
+            left: 40%;
+            animation-delay: -12s;
+            animation-duration: 23s;
+        }
+
+        .shape-6 {
+            width: 250px;
+            height: 250px;
+            top: -5%;
+            right: 30%;
+            animation-delay: -3s;
+            animation-duration: 28s;
+            border-color: rgba(118, 75, 162, 0.15);
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.3;
+            }
+            25% {
+                transform: translate(20px, -30px) rotate(90deg);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translate(-10px, 20px) rotate(180deg);
+                opacity: 0.3;
+            }
+            75% {
+                transform: translate(30px, 10px) rotate(270deg);
+                opacity: 0.5;
+            }
+        }
+
+        /* Subtle grid overlay */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(102, 126, 234, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(102, 126, 234, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* Floating dots */
+        .dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(102, 126, 234, 0.4);
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .dot-1 { top: 15%; left: 10%; animation-delay: 0s; }
+        .dot-2 { top: 25%; left: 80%; animation-delay: -1s; }
+        .dot-3 { top: 45%; left: 25%; animation-delay: -2s; }
+        .dot-4 { top: 65%; left: 70%; animation-delay: -0.5s; }
+        .dot-5 { top: 80%; left: 40%; animation-delay: -1.5s; }
+        .dot-6 { top: 35%; left: 55%; animation-delay: -3s; }
+        .dot-7 { top: 55%; left: 15%; animation-delay: -2.5s; }
+        .dot-8 { top: 75%; left: 85%; animation-delay: -0.8s; }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.4;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.8;
+            }
+        }
+
+        /* Connecting lines animation */
+        .line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.2), transparent);
+            animation: lineMove 8s ease-in-out infinite;
+        }
+
+        .line-1 {
+            width: 200px;
+            top: 20%;
+            left: 5%;
+            transform: rotate(30deg);
+            animation-delay: 0s;
+        }
+
+        .line-2 {
+            width: 150px;
+            top: 50%;
+            right: 10%;
+            transform: rotate(-20deg);
+            animation-delay: -2s;
+        }
+
+        .line-3 {
+            width: 180px;
+            bottom: 30%;
+            left: 20%;
+            transform: rotate(45deg);
+            animation-delay: -4s;
+        }
+
+        @keyframes lineMove {
+            0%, 100% {
+                opacity: 0;
+                transform: translateX(-20px) rotate(30deg);
+            }
+            50% {
+                opacity: 1;
+                transform: translateX(20px) rotate(30deg);
+            }
         }
 
         .header-section {
@@ -536,7 +724,26 @@
         </div>
     </nav>
 
-    <canvas id="particleCanvas"></canvas>
+    <div class="bg-animation">
+        <div class="bg-grid"></div>
+        <div class="geometric-shape shape-1"></div>
+        <div class="geometric-shape shape-2"></div>
+        <div class="geometric-shape shape-3"></div>
+        <div class="geometric-shape shape-4"></div>
+        <div class="geometric-shape shape-5"></div>
+        <div class="geometric-shape shape-6"></div>
+        <div class="dot dot-1"></div>
+        <div class="dot dot-2"></div>
+        <div class="dot dot-3"></div>
+        <div class="dot dot-4"></div>
+        <div class="dot dot-5"></div>
+        <div class="dot dot-6"></div>
+        <div class="dot dot-7"></div>
+        <div class="dot dot-8"></div>
+        <div class="line line-1"></div>
+        <div class="line line-2"></div>
+        <div class="line line-3"></div>
+    </div>
 
     <div class="main-content">
         <div class="header-section">
@@ -1147,146 +1354,7 @@
         updateOffsetDisplay();
         updateTodayView();
 
-        // Particle Canvas Animation
-        const canvas = document.getElementById('particleCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        let mouse = {
-            x: canvas.width / 2,
-            y: canvas.height / 2
-        };
-
-        class Particle {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 3 + 1;
-                this.baseX = this.x;
-                this.baseY = this.y;
-                this.density = (Math.random() * 30) + 1;
-                this.distance = 0;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-            }
-
-            draw() {
-                ctx.fillStyle = `rgba(102, 126, 234, ${1 - this.distance / 200})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.closePath();
-                ctx.fill();
-            }
-
-            update() {
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
-                this.distance = Math.sqrt(dx * dx + dy * dy);
-                let forceDirectionX = dx / this.distance;
-                let forceDirectionY = dy / this.distance;
-                let maxDistance = 150;
-                let force = (maxDistance - this.distance) / maxDistance;
-                let directionX = forceDirectionX * force * this.density;
-                let directionY = forceDirectionY * force * this.density;
-
-                if (this.distance < maxDistance) {
-                    this.x -= directionX;
-                    this.y -= directionY;
-                } else {
-                    if (this.x !== this.baseX) {
-                        let dx = this.x - this.baseX;
-                        this.x -= dx / 10;
-                    }
-                    if (this.y !== this.baseY) {
-                        let dy = this.y - this.baseY;
-                        this.y -= dy / 10;
-                    }
-                }
-
-                // Drift
-                this.baseX += this.vx;
-                this.baseY += this.vy;
-
-                // Boundaries
-                if (this.baseX < 0 || this.baseX > canvas.width) {
-                    this.vx = -this.vx;
-                    this.baseX = Math.max(0, Math.min(canvas.width, this.baseX));
-                }
-                if (this.baseY < 0 || this.baseY > canvas.height) {
-                    this.vy = -this.vy;
-                    this.baseY = Math.max(0, Math.min(canvas.height, this.baseY));
-                }
-            }
-        }
-
-        // Create particles
-        let particlesArray = [];
-        const numberOfParticles = 150;
-
-        function init() {
-            particlesArray = [];
-            for (let i = 0; i < numberOfParticles; i++) {
-                particlesArray.push(new Particle());
-            }
-        }
-
-        // Connect particles
-        function connect() {
-            for (let a = 0; a < particlesArray.length; a++) {
-                for (let b = a; b < particlesArray.length; b++) {
-                    let dx = particlesArray[a].x - particlesArray[b].x;
-                    let dy = particlesArray[a].y - particlesArray[b].y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-
-                    if (distance < 100) {
-                        ctx.strokeStyle = `rgba(102, 126, 234, ${1 - distance / 100})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.beginPath();
-                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                        ctx.stroke();
-                    }
-                }
-            }
-        }
-
-        // Animation loop
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-                particlesArray[i].draw();
-            }
-            connect();
-            requestAnimationFrame(animate);
-        }
-
-        init();
-        animate();
-
-        // Mouse move event
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.x;
-            mouse.y = e.y;
-        });
-
-        // Resize event
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            init();
-        });
-
-        // Touch support for mobile
-        window.addEventListener('touchmove', (e) => {
-            mouse.x = e.touches[0].clientX;
-            mouse.y = e.touches[0].clientY;
-        });
-
-        // Interactive Title Effect
+        // Interactive Title Effect (works on desktop hover)
         const mainTitle = document.getElementById('mainTitle');
         
         if (mainTitle) {
