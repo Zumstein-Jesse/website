@@ -442,6 +442,209 @@
             filter: brightness(1.2) grayscale(0);
         }
 
+        /* Demo Reel Section */
+        .demo-reel-section {
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+            position: relative;
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        .demo-reel-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 30% 20%, rgba(102, 126, 234, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 70% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 30%);
+            pointer-events: none;
+        }
+
+        .demo-reel-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .password-gate {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .password-gate.hidden {
+            display: none;
+        }
+
+        .lock-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+            animation: pulse-lock 2s infinite;
+        }
+
+        @keyframes pulse-lock {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 15px 50px rgba(102, 126, 234, 0.6);
+            }
+        }
+
+        .lock-icon svg {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        .password-gate h3 {
+            color: #ccd6f6;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .password-gate p {
+            color: #8892b0;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .password-form {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .password-input {
+            background: rgba(30, 30, 63, 0.8);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            padding: 15px 25px;
+            font-size: 1.1em;
+            color: #ccd6f6;
+            width: 280px;
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .password-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .password-input::placeholder {
+            color: #5a6685;
+        }
+
+        .password-input.error {
+            border-color: #ff6b6b;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-10px); }
+            40%, 80% { transform: translateX(10px); }
+        }
+
+        .unlock-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 35px;
+            font-size: 1.1em;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .unlock-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .unlock-btn:active {
+            transform: translateY(0);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            margin-top: 15px;
+            font-size: 0.95em;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .error-message.show {
+            opacity: 1;
+        }
+
+        .video-container {
+            display: none;
+            padding: 20px;
+        }
+
+        .video-container.unlocked {
+            display: block;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .video-wrapper {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .video-wrapper video {
+            width: 100%;
+            display: block;
+            background: #000;
+        }
+
+        .video-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .video-title h3 {
+            color: #64ffda;
+            font-size: 1.6em;
+            margin: 0;
+        }
+
+        .unlocked-badge {
+            background: rgba(100, 255, 218, 0.15);
+            color: #64ffda;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            border: 1px solid rgba(100, 255, 218, 0.3);
+        }
+
         .experience-section {
             background: #0f0f1e;
             position: relative;
@@ -1044,6 +1247,43 @@
                 </div>
                 <div class="client-card">
                     <img src="images/NetvrkB.png" alt="Netvrk" style="border-radius: 10px;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo-reel-section">
+        <div class="container">
+            <h2 class="section-title">Demo Reel</h2>
+            <p class="section-subtitle">A showcase of my work across games, animation, and technical art</p>
+            
+            <div class="demo-reel-content">
+                <div class="password-gate" id="passwordGate">
+                    <div class="lock-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>
+                        </svg>
+                    </div>
+                    <h3>Private Content</h3>
+                    <p>Enter the password to access the demo reel</p>
+                    <div class="password-form">
+                        <input type="password" class="password-input" id="reelPassword" placeholder="Enter password" autocomplete="off">
+                        <button class="unlock-btn" id="unlockBtn">Unlock</button>
+                    </div>
+                    <p class="error-message" id="errorMessage">Incorrect password. Please try again.</p>
+                </div>
+                
+                <div class="video-container" id="videoContainer">
+                    <div class="video-title">
+                        <h3>Demo Reel 2026</h3>
+                        <span class="unlocked-badge">✓ Unlocked</span>
+                    </div>
+                    <div class="video-wrapper">
+                        <video controls preload="metadata" id="demoReelVideo">
+                            <source src="Reel_2026.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1709,6 +1949,50 @@
         }
 
         animateExperienceBackground();
+
+        // Demo Reel Password Protection
+        const passwordGate = document.getElementById('passwordGate');
+        const videoContainer = document.getElementById('videoContainer');
+        const passwordInput = document.getElementById('reelPassword');
+        const unlockBtn = document.getElementById('unlockBtn');
+        const errorMessage = document.getElementById('errorMessage');
+        const correctPassword = 'ZumsteinReel26';
+
+        function attemptUnlock() {
+            const enteredPassword = passwordInput.value;
+            
+            if (enteredPassword === correctPassword) {
+                passwordGate.classList.add('hidden');
+                videoContainer.classList.add('unlocked');
+                // Clear the password from memory
+                passwordInput.value = '';
+            } else {
+                passwordInput.classList.add('error');
+                errorMessage.classList.add('show');
+                
+                setTimeout(() => {
+                    passwordInput.classList.remove('error');
+                }, 500);
+                
+                setTimeout(() => {
+                    errorMessage.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        unlockBtn.addEventListener('click', attemptUnlock);
+        
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                attemptUnlock();
+            }
+        });
+
+        // Clear error state when typing
+        passwordInput.addEventListener('input', () => {
+            passwordInput.classList.remove('error');
+            errorMessage.classList.remove('show');
+        });
 
         // Handle resize for all canvases
         window.addEventListener('resize', () => {
