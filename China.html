@@ -750,7 +750,7 @@
             <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px;">
                 <div>
                     <h1 id="mainTitle" data-text="GREAT WALL TRAINER">GREAT WALL TRAINER</h1>
-                    <p class="subtitle">MAY 17, 2026 • PROTOCOL 21</p>
+                    <p class="subtitle">MAY 17, 2026 • NOVICE 2 ADAPTED • 21 WEEKS</p>
                 </div>
                 <button class="btn-settings" id="settingsBtn">Plan Settings</button>
             </div>
@@ -817,286 +817,291 @@
     </div>
 
     <script>
-        // Training Plan Data
+        // Training Plan Data - Based on Hal Higdon Novice 2 Marathon Program
+        // Adapted for Great Wall Marathon with stair training
+        // Reference: https://www.halhigdon.com/training-programs/marathon-training/novice-2-marathon/
+        // Key: 20-miler is 3 weeks before race (matching Novice 2 timing)
         const RACE_DATE_STR = "2026-05-17";
         const STATIC_PLAN = {
             generatedAt: new Date().toISOString(),
             weeks: [
-                // PHASE 1: FOUNDATION (Weeks 1-4)
+                // PHASE 1: FOUNDATION (Weeks 1-3) - Building base before Novice 2 mileage
                 {
                     weekNumber: 1,
-                    theme: "Phase 1: Foundation - Gentle Entry",
+                    theme: "Foundation: Base Building",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "2x12 Bodyweight Squats, 2x10 Lunges (each leg), 2x15 Calf Raises, 2x10 Step-ups (each leg), 2x12 Glute Bridges, 2x30s Plank. Focus on form and movement quality.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Just easy miles to get started. Pace: {EASY}. Start conservatively.", distanceMiles: 3 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stair Introduction", description: "15 mins StairMaster or stadium stairs. Very easy pace (Zone 1-2). Target: 500-700 steps. Just getting familiar with the movement.", durationMinutes: 15, stairsFocus: true },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "2x10 Pushups, 2x12 Rows, 2x15 Glute Bridges, 2x12 Deadbugs, 2x10 Bird-Dogs (each side), 15 min Yoga. Gentle introduction.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}. Keep it very comfortable.", distanceMiles: 2 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady, comfortable effort. Focus on time on feet and building the habit. Pace: {EASY}.", distanceMiles: 4 },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. Focus on sleep and nutrition. Plan starts today!" },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Gentle start. Pace: {EASY}. Focus on form.", distanceMiles: 3 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 2mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 4 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Friday", workoutType: "Rest", title: "Rest Day", description: "Complete rest or light stretching." },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "First long run. Steady, comfortable effort. Pace: {LONG}.", distanceMiles: 5 },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Stair Introduction", description: "20 mins StairMaster or stadium stairs. Very easy (Zone 2).", durationMinutes: 20, stairsFocus: true }
                     ]
                 },
                 {
                     weekNumber: 2,
-                    theme: "Phase 1: Consistency",
+                    theme: "Foundation: Building Consistency",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x12 Squats, 3x12 Step-ups (weighted), 3x15 Calf Raises, 3x10 Bulgarian Split Squats (each leg), 3x12 Hip Thrusts, 3x60s Plank.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Speed Play", description: "1mi Warmup, 6x1min fast @ {SPEED} / 2min easy, 1mi Cooldown.", distanceMiles: 4 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stair Endurance", description: "25 mins StairMaster. Steady pace. Target: 1200 steps.", durationMinutes: 25, stairsFocus: true },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x10 Overhead Press, 3x12 Rows, 3x12 Deadbugs, 3x10 Single Leg RDL (each leg), 3x15 Side Planks (each side), 15 min Stretching.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 3 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 7 },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting." },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 3mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 5 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Friday", workoutType: "Strength", title: "Lower Body Strength", description: "3x12 Squats, 3x10 Lunges (each leg), 3x15 Calf Raises, 3x12 Step-ups, 3x12 Glute Bridges, 3x45s Plank.", durationMinutes: 45 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Building time on feet. Pace: {LONG}.", distanceMiles: 6 },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Stair Endurance", description: "25 mins continuous stairs. Steady pace (Zone 2-3).", durationMinutes: 25, stairsFocus: true }
                     ]
                 },
                 {
                     weekNumber: 3,
-                    theme: "Phase 1: Build",
+                    theme: "Foundation: Ready for Novice 2",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x12 Squats, 3x10 Bulgarian Split Squats (each leg), 3x20 Calf Raises, 3x12 Reverse Lunges, 3x10 Wall Sits (45s hold), Core circuit: Planks, Russian Twists, Bicycle Crunches.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Tempo Run", description: "1mi Warmup, 2mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 4 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stair Intervals", description: "30 mins total. 1 min hard / 1 min easy intervals.", durationMinutes: 30, stairsFocus: true },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x10 Pushups, 3x12 Bent-over Rows, 3x10 Shoulder Press, 3x15 Glute Bridges, 3x12 Deadbugs, 20 min Yoga for hips.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 4 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 8 },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting." },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 3mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 5 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Friday", workoutType: "Strength", title: "Lower Body Strength", description: "3x12 Squats, 3x10 Bulgarian Split Squats (each leg), 3x15 Calf Raises, 3x12 Romanian Deadlifts, 3x15 Glute Bridges, 3x60s Plank.", durationMinutes: 45 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Preparing for Novice 2 mileage. Pace: {LONG}.", distanceMiles: 7 },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Stair Training", description: "30 mins stairs. Steady effort.", durationMinutes: 30, stairsFocus: true }
                     ]
                 },
+                // PHASE 2: NOVICE 2 WEEKS 1-6 (Weeks 4-9)
                 {
                     weekNumber: 4,
-                    theme: "Phase 1: Recovery",
+                    theme: "Novice 2 Week 1",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x15 Bodyweight Squats, 3x12 Reverse Lunges, 3x15 Calf Raises, 3x10 Single Leg Glute Bridges (each leg), 3x30s Wall Sits, extensive mobility work.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Just easy miles. Pace: {EASY}.", distanceMiles: 3 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Cross Train", description: "30 mins cycling or swimming (low impact).", durationMinutes: 30 },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x45s Planks, 3x30s Side Planks (each side), 3x10 Bird-Dogs (each side), 3x15 Deadbugs, 3x12 Russian Twists, 10 min stretching.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 3 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 5 },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting." },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 3mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 5 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Friday", workoutType: "Strength", title: "Lower Body Strength", description: "3x12 Squats, 3x10 Lunges (each leg), 3x15 Calf Raises, 3x12 Step-ups, 3x12 Glute Bridges, 3x45s Plank.", durationMinutes: 45 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Novice 2 Week 1. Pace: {LONG}.", distanceMiles: 8 },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Stair Training", description: "35 mins stairs. Building stair fitness.", durationMinutes: 35, stairsFocus: true }
                     ]
                 },
-                // PHASE 2: STRENGTH & HILLS (Weeks 5-8)
                 {
                     weekNumber: 5,
-                    theme: "Phase 2: Hills",
+                    theme: "Novice 2 Week 2",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "4x10 Heavy Squats, 3x10 Box Jumps, 4x15 Calf Raises, 3x10 Bulgarian Split Squats (each leg), 3x12 Romanian Deadlifts, 3x60s Plank.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Hill Repeats", description: "Warmup, 8x45sec hill sprints (Run up hard, walk down), Cooldown.", distanceMiles: 4 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stair Power", description: "30 mins stairs. Wear a weighted vest (10-15lbs) if possible.", durationMinutes: 30, stairsFocus: true },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "4x10 Deadlifts (moderate weight), 3x12 Rows, 3x10 Overhead Press, 3x15 Glute Bridges, 3x12 Deadbugs, Core focus: Planks, Side Planks, Russian Twists.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 4 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 9, stairsFocus: true },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting." },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 4mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 6 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Friday", workoutType: "Strength", title: "Lower Body Strength", description: "3x12 Squats, 3x10 Bulgarian Split Squats (each leg), 3x20 Calf Raises, 3x12 Romanian Deadlifts, 3x15 Glute Bridges, 3x60s Plank.", durationMinutes: 45 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Building distance. Pace: {LONG}.", distanceMiles: 9 },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Stair Intervals", description: "35 mins. 1 min hard / 1 min easy intervals.", durationMinutes: 35, stairsFocus: true }
                     ]
                 },
                 {
                     weekNumber: 6,
-                    theme: "Phase 2: Volume",
+                    theme: "Novice 2 Week 3 (Stepback)",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "4x10 Squats, 3x12 Lunges (each leg), 4x20 Calf Raises (seated & standing), 3x10 Step-ups (weighted), 3x12 Hip Thrusts, 3x60s Wall Sits.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Threshold", description: "1mi Warmup, 3mi @ {TEMPO} continuous, 1mi Cooldown.", distanceMiles: 5 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stair Endurance", description: "40 mins continuous stairs. Zone 2/3 heart rate.", durationMinutes: 40, stairsFocus: true },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "Full body circuit: 3x12 Pushups, 3x12 Rows, 3x15 Kettlebell Swings, 3x10 Overhead Press, 3x15 Glute Bridges, 3x12 Deadbugs.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 4 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 10 },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Recovery week - embrace the rest!" },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 3mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 5 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Friday", workoutType: "Rest", title: "Rest Day", description: "Complete rest - stepback week." },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run (Stepback)", description: "Reduced mileage for recovery. Pace: {LONG}.", distanceMiles: 6 },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Easy Cross", description: "25 mins easy cycling or swimming.", durationMinutes: 25 }
                     ]
                 },
                 {
                     weekNumber: 7,
-                    theme: "Phase 2: Power",
+                    theme: "Novice 2 Week 4",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "4x8 Squats (Heavier), 3x8 Step-ups (weighted), 3x10 Plyometric Lunges (each leg), 3x10 Bulgarian Split Squats, 3x12 Romanian Deadlifts, 3x20 Calf Raises.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Long Intervals", description: "1mi Warmup, 3x1mi @ {TEMPO} w/ 2min rest, Cooldown.", distanceMiles: 6 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Mixed Climb", description: "30 mins stairs + 15 mins incline treadmill walking (15%).", durationMinutes: 45, stairsFocus: true },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "Posterior chain focus: 4x10 Romanian Deadlifts, 3x15 Glute Bridges, 3x12 Back Extensions, 3x10 Single Leg RDL (each leg), 3x12 Deadbugs, 3x60s Plank.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 4 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 12, stairsFocus: true },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting." },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 5mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 7 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Friday", workoutType: "Strength", title: "Lower Body Strength", description: "4x10 Squats (weighted), 3x12 Step-ups, 4x15 Calf Raises, 3x10 Bulgarian Split Squats (each leg), 3x12 Hip Thrusts, 3x60s Plank.", durationMinutes: 50 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Breaking double digits! Pace: {LONG}.", distanceMiles: 11 },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Stair Power", description: "40 mins stairs. Add weighted vest (10-15lbs) if possible.", durationMinutes: 40, stairsFocus: true }
                     ]
                 },
                 {
                     weekNumber: 8,
-                    theme: "Phase 2: Recovery",
+                    theme: "Novice 2 Week 5",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x15 Bodyweight Squats, 3x12 Reverse Lunges, 3x15 Calf Raises, 3x10 Clamshells (each side), 3x12 Leg Raises, mobility and light resistance bands.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Fartlek", description: "4 miles easy with 5x1min pickups.", distanceMiles: 4 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Easy Climb", description: "20 mins stairs very slow.", durationMinutes: 20, stairsFocus: true },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x45s Planks, 3x12 Deadbugs, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 3x30s Side Planks (each side), 20 min Yoga.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 3 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 8 },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting." },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Hill Repeats", description: "Warmup, 6x45sec hill sprints (run up hard, walk down), Cooldown.", distanceMiles: 4 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 5mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 7 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Friday", workoutType: "Strength", title: "Lower Body Strength", description: "4x10 Squats, 3x10 Box Jumps, 3x12 Romanian Deadlifts, 3x10 Single Leg RDL (each leg), 3x15 Glute Bridges, 3x60s Plank.", durationMinutes: 50 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Continuing to build. Pace: {LONG}.", distanceMiles: 12, stairsFocus: true },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Stair Endurance", description: "45 mins continuous stairs. Zone 2-3 heart rate.", durationMinutes: 45, stairsFocus: true }
                     ]
                 },
-                // PHASE 3: PEAK TRAINING (Weeks 9-16)
                 {
                     weekNumber: 9,
-                    theme: "Phase 3: Endurance",
+                    theme: "Novice 2 Week 6 (Stepback)",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "Maintenance lifting: 3x10 Squats, 3x10 Lunges (each leg), 3x15 Calf Raises, 3x12 Step-ups, 3x10 Romanian Deadlifts, 3x60s Plank.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Yasso 800s", description: "Warmup, 6x800m @ {SPEED} (rest time = run time), Cooldown.", distanceMiles: 6 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stair Volume", description: "45 mins stairs. Find a rhythm. Target: 2500+ steps.", durationMinutes: 45, stairsFocus: true },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x60s Planks, 3x15 Deadbugs, 3x12 Russian Twists, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 10 mins continuous ab work.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 5 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 13 },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Recovery week - let the body adapt!" },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 4mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 6 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Friday", workoutType: "Rest", title: "Rest Day", description: "Complete rest - stepback week." },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run (Stepback)", description: "Reduced mileage for recovery. Pace: {LONG}.", distanceMiles: 9 },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Easy Stairs", description: "25 mins easy stairs.", durationMinutes: 25, stairsFocus: true }
                     ]
                 },
+                // PHASE 3: NOVICE 2 WEEKS 7-9 (Weeks 10-12)
                 {
                     weekNumber: 10,
-                    theme: "BUFFER WEEK",
+                    theme: "Novice 2 Week 7",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "Optional light strength: 3x12 Bodyweight Squats, 3x10 Reverse Lunges, 3x15 Calf Raises, 3x10 Glute Bridges, 3x30s Wall Sits, or rest.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Buffer Run", description: "Optional 3-4 miles easy if healthy.", distanceMiles: 4 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Buffer Cross", description: "Walk or Swim.", durationMinutes: 30 },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x30s Planks, 3x10 Deadbugs, 3x10 Bird-Dogs, 3x12 Glute Bridges, 3x30s Side Planks, stretch / massage.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 0 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 6 },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting." },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 6mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 8 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Friday", workoutType: "Strength", title: "Maintenance Strength", description: "3x10 Squats, 3x10 Lunges (each leg), 3x15 Calf Raises, 3x12 Step-ups, 3x10 Romanian Deadlifts, 3x60s Plank.", durationMinutes: 45 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Building toward peak. Pace: {LONG}.", distanceMiles: 14 },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Stair Challenge", description: "50 mins stairs. Mental preparation begins.", durationMinutes: 50, stairsFocus: true }
                     ]
                 },
                 {
                     weekNumber: 11,
-                    theme: "Phase 3: Load",
+                    theme: "Novice 2 Week 8",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x10 Squats, 3x10 Deadlifts, 3x20 Calf Raises, 3x12 Step-ups (weighted), 3x10 Bulgarian Split Squats (each leg), 3x60s Plank.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Tempo Build", description: "1mi Warmup, 4mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 6 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stair Intervals", description: "50 mins. 5 min warmup, 5x(3min Hard/2min Easy), Cooldown.", durationMinutes: 50, stairsFocus: true },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "Upper body push/pull: 3x12 Pushups, 3x12 Rows, 3x10 Overhead Press, 3x15 Glute Bridges, 3x12 Deadbugs, 3x45s Side Planks (each side).", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 5 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 14, stairsFocus: true },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting." },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Yasso 800s", description: "Warmup, 6x800m @ {SPEED} (rest time = run time), Cooldown.", distanceMiles: 5 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 6mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 8 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 5 },
+                        { dayName: "Friday", workoutType: "Strength", title: "Maintenance Strength", description: "3x10 Squats, 3x10 Step-ups, 3x15 Calf Raises, 3x12 Glute Bridges, 3x10 Romanian Deadlifts, 3x60s Plank.", durationMinutes: 45 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Big week! Pace: {LONG}.", distanceMiles: 15, stairsFocus: true },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Hour of Power", description: "60 mins continuous stairs. Mental resilience test.", durationMinutes: 60, stairsFocus: true }
                     ]
                 },
                 {
                     weekNumber: 12,
-                    theme: "Phase 3: Threshold",
+                    theme: "BUFFER WEEK",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x10 Squats, 3x10 Box Jumps, 3x12 Step-ups, 3x15 Calf Raises, 3x10 Romanian Deadlifts, 3x60s Wall Sits.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Mile Repeats", description: "Warmup, 4x1mi @ {SPEED} w/ 3min rest, Cooldown.", distanceMiles: 7 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Hour of Power", description: "60 mins continuous StairMaster/Stairs. Mental resilience test.", durationMinutes: 60, stairsFocus: true },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "Core stability: 3x60s Planks, 3x30s Side Planks (each side), 3x12 Deadbugs, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 3x12 Russian Twists.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 5 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 15 },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Buffer week - use if needed for recovery, sickness, or life events." },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run (Optional)", description: "3-4 miles easy if feeling good. Skip if needed.", distanceMiles: 4 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run (Optional)", description: "Optional: 1mi Warmup, 3mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 5 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run (Optional)", description: "Easy effort if feeling good. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Friday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. Stretch, foam roll, massage." },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run (Reduced)", description: "Shorter long run. Pace: {LONG}.", distanceMiles: 10 },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Easy Cross", description: "30 mins walk, swim, or easy bike.", durationMinutes: 30 }
                     ]
                 },
+                // PHASE 4: NOVICE 2 WEEKS 10-15 (Weeks 13-18) - Including 20-miler
                 {
                     weekNumber: 13,
-                    theme: "Phase 3: Recovery",
+                    theme: "Novice 2 Week 10",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x15 Bodyweight Squats, 3x12 Reverse Lunges, 3x15 Calf Raises, 3x10 Single Leg Glute Bridges, 3x30s Wall Sits, yoga / foam roll.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Just miles. Pace: {EASY}.", distanceMiles: 5 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Easy Cross", description: "30 mins bike.", durationMinutes: 30 },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "Light core: 3x45s Planks, 3x12 Deadbugs, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 3x30s Side Planks (each side), 10 min stretching.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 3 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 10 },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting." },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 6mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 8 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 5 },
+                        { dayName: "Friday", workoutType: "Strength", title: "Light Strength", description: "3x10 Bodyweight Squats, 3x10 Lunges, 3x15 Calf Raises, 3x12 Glute Bridges, 3x45s Plank.", durationMinutes: 30 },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Big long run! Pace: {LONG}.", distanceMiles: 17, stairsFocus: true },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Stair Simulation", description: "60 mins stairs. Wear race gear/pack if possible.", durationMinutes: 60, stairsFocus: true }
                     ]
                 },
                 {
                     weekNumber: 14,
-                    theme: "Phase 3: Peak 1",
+                    theme: "Novice 2 Week 11",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "Maintenance lifting (lighter weights): 3x10 Squats, 3x10 Lunges (each leg), 3x15 Calf Raises, 3x12 Step-ups, 3x10 Romanian Deadlifts, 3x60s Plank.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Hill Circuits", description: "Run 0.5mi, Hill Sprint 1min, 20 Squats, Repeat x 5.", distanceMiles: 6 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stair Challenge", description: "60 mins stairs. Try to simulate race gear (wear your pack).", durationMinutes: 60, stairsFocus: true },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x45s Planks, 3x12 Deadbugs, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 3x30s Side Planks (each side), 20 min mobility work.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 5 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 17, stairsFocus: true },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting." },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Hill Circuits", description: "Run 0.5mi, Hill Sprint 1min, 15 Squats, Repeat x 5, Cooldown.", distanceMiles: 5 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 7mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 9 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 5 },
+                        { dayName: "Friday", workoutType: "Rest", title: "Rest Day", description: "Complete rest." },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "High volume week! Pace: {LONG}.", distanceMiles: 18, stairsFocus: true },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Stair Endurance", description: "55 mins stairs. Building mental toughness.", durationMinutes: 55, stairsFocus: true }
                     ]
                 },
                 {
                     weekNumber: 15,
-                    theme: "Phase 3: Peak 2",
+                    theme: "Novice 2 Week 12 (Stepback)",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "Maintenance lifting: 3x10 Squats, 3x10 Lunges (each leg), 3x15 Calf Raises, 3x12 Step-ups, 3x10 Romanian Deadlifts, 3x60s Plank.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Speed Tune", description: "Warmup, 10x400m @ {SPEED} w/ 90s rest, Cooldown.", distanceMiles: 7 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Leg Drain", description: "45 mins stairs immediately followed by 15 min lunges/squats.", durationMinutes: 60, stairsFocus: true },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "Core: 3x60s Planks, 3x12 Deadbugs, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 3x12 Russian Twists, 3x30s Side Planks (each side).", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 5 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 19, stairsFocus: true },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Critical recovery before peak weeks!" },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 5mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 7 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Friday", workoutType: "Rest", title: "Rest Day", description: "Complete rest - stepback week." },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run (Stepback)", description: "Reduced mileage for recovery. Pace: {LONG}.", distanceMiles: 13 },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Easy Stairs", description: "30 mins easy stairs.", durationMinutes: 30, stairsFocus: true }
                     ]
                 },
                 {
                     weekNumber: 16,
-                    theme: "Phase 3: Peak 3",
+                    theme: "Novice 2 Week 13",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "Light weights: 3x10 Squats, 3x10 Lunges (each leg), 3x15 Calf Raises, 3x12 Step-ups, 3x10 Romanian Deadlifts, 3x60s Plank.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Tempo", description: "1mi Warmup, 5mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 7 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Final Stair Long", description: "70 mins stairs. This is your max stair duration.", durationMinutes: 70, stairsFocus: true },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x45s Planks, 3x12 Deadbugs, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 3x30s Side Planks (each side), 20 min stretching.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 5 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 20, stairsFocus: true },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting." },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 5 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 6mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 8 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 5 },
+                        { dayName: "Friday", workoutType: "Rest", title: "Rest Day", description: "Complete rest." },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Second to last big one! Pace: {LONG}.", distanceMiles: 19, stairsFocus: true },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Stair Challenge", description: "60 mins stairs - near peak stair fitness.", durationMinutes: 60, stairsFocus: true }
                     ]
                 },
-                // PHASE 4: TAPER (Weeks 17-21)
                 {
                     weekNumber: 17,
-                    theme: "Taper: Cutback",
+                    theme: "Novice 2 Week 14 (Stepback)",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "Bodyweight strength only: 3x15 Bodyweight Squats, 3x12 Reverse Lunges, 3x15 Calf Raises, 3x10 Single Leg Glute Bridges (each leg), 3x30s Wall Sits.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Intervals", description: "Warmup, 4x800m @ {SPEED}, Cooldown.", distanceMiles: 5 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stairs Taper", description: "40 mins steady.", durationMinutes: 40, stairsFocus: true },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x45s Planks, 3x12 Deadbugs, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 3x30s Side Planks (each side), 20 min yoga.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 4 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 13 },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Recovery before 20-miler!" },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 4mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 6 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Friday", workoutType: "Rest", title: "Rest Day", description: "Complete rest - stepback week." },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run (Stepback)", description: "Reduced mileage. Pace: {LONG}.", distanceMiles: 12 },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Easy Cross", description: "30 mins easy cycling or walking.", durationMinutes: 30 }
                     ]
                 },
                 {
                     weekNumber: 18,
-                    theme: "Taper: Sharpen",
+                    theme: "Novice 2 Week 15 - 20 MILER",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x15 Bodyweight Squats, 3x12 Reverse Lunges, 3x15 Calf Raises, 3x10 Glute Bridges, 3x30s Wall Sits, 20 min mobility work.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Fartlek", description: "4 miles with 4x1min pickups.", distanceMiles: 4 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Stairs Taper", description: "30 mins easy.", durationMinutes: 30, stairsFocus: true },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "Core: 3x45s Planks, 3x12 Deadbugs, 3x10 Bird-Dogs (each side), 3x15 Glute Bridges, 3x30s Side Planks (each side).", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 4 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 10 },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. Prepare for your longest run!" },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 5 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 5mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 7 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 5 },
+                        { dayName: "Friday", workoutType: "Rest", title: "Rest Day", description: "Complete rest before your biggest run." },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "🏃 20 MILE PEAK RUN 🏃", description: "This is it - your longest training run! Pace: {LONG}. Practice nutrition strategy.", distanceMiles: 20, stairsFocus: true },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Final Long Stairs", description: "50 mins stairs - last big stair session before taper.", durationMinutes: 50, stairsFocus: true }
                     ]
                 },
+                // PHASE 5: TAPER (Weeks 19-21) - Only 3 weeks like Novice 2
                 {
                     weekNumber: 19,
-                    theme: "Taper: Rest",
+                    theme: "Taper Week 1 (Novice 2 Week 16)",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x12 Bodyweight Squats, 3x10 Reverse Lunges, 3x15 Calf Raises, 3x10 Glute Bridges, 3x30s Wall Sits, or rest.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Marathon Pace", description: "2mi Warmup, 2mi @ {MP}, 1mi Cooldown.", distanceMiles: 5 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Walk", description: "30 min walk.", durationMinutes: 30 },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x30s Planks, 3x10 Deadbugs, 3x10 Bird-Dogs, 3x12 Glute Bridges, 3x30s Side Planks, or rest.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 3 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 8 },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Taper begins! Trust your training." },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 4mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 6 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 4 },
+                        { dayName: "Friday", workoutType: "Rest", title: "Rest Day", description: "Complete rest." },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run (Taper)", description: "Reduced but still meaningful. Pace: {LONG}.", distanceMiles: 12 },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Stairs Taper", description: "35 mins steady stairs.", durationMinutes: 35, stairsFocus: true }
                     ]
                 },
                 {
                     weekNumber: 20,
-                    theme: "Taper: Final Prep",
+                    theme: "Taper Week 2 (Novice 2 Week 17)",
                     days: [
-                        { dayName: "Monday", workoutType: "Strength", title: "Lower Body Strength", description: "3x10 Bodyweight Squats, 3x10 Reverse Lunges, 3x15 Calf Raises, 3x10 Glute Bridges, 3x30s Wall Sits, or rest/packing.", durationMinutes: 60 },
-                        { dayName: "Tuesday", workoutType: "Run", title: "Shakeout", description: "3 miles easy @ {EASY}.", distanceMiles: 3 },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Rest", description: "Final packing & prep.", durationMinutes: 0 },
-                        { dayName: "Thursday", workoutType: "Strength", title: "Core & Mobility", description: "3x30s Planks, 3x10 Deadbugs, 3x10 Bird-Dogs, 3x12 Glute Bridges, 3x30s Side Planks, 20 min mobility work.", durationMinutes: 60 },
-                        { dayName: "Friday", workoutType: "Run", title: "Shakeout Run", description: "Easy recovery effort. Pace: {EASY}.", distanceMiles: 2 },
-                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run", description: "Steady effort. Focus on time on feet. Pace: {LONG}.", distanceMiles: 0 },
-                        { dayName: "Sunday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. No running, no lifting. Focus on sleep and nutrition." }
+                        { dayName: "Monday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. Trust the taper." },
+                        { dayName: "Tuesday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Pace Run", description: "1mi Warmup, 3mi @ {TEMPO}, 1mi Cooldown.", distanceMiles: 5 },
+                        { dayName: "Thursday", workoutType: "Run", title: "Easy Run", description: "Easy effort. Pace: {EASY}.", distanceMiles: 3 },
+                        { dayName: "Friday", workoutType: "Rest", title: "Rest Day", description: "Complete rest. Start organizing race gear." },
+                        { dayName: "Saturday", workoutType: "Long Run", title: "Long Run (Taper)", description: "Last long-ish run. Pace: {LONG}.", distanceMiles: 8 },
+                        { dayName: "Sunday", workoutType: "Cross Training", title: "Final Stairs", description: "20 mins easy stairs - last stair session.", durationMinutes: 20, stairsFocus: true }
                     ]
                 },
+                // WEEK 21: RACE WEEK (Novice 2 Week 18)
                 {
                     weekNumber: 21,
-                    theme: "TRAVEL & RACE",
+                    theme: "RACE WEEK (Novice 2 Week 18)",
                     days: [
-                        { dayName: "Monday", workoutType: "Rest", title: "Depart for China", description: "Travel Day. Hydrate well on flight." },
-                        { dayName: "Tuesday", workoutType: "Rest", title: "In Transit", description: "Travel Day. Move legs in aisle when possible." },
-                        { dayName: "Wednesday", workoutType: "Cross Training", title: "Arrival in China", description: "Land in China. Light walking to shake out legs. Hydrate." },
-                        { dayName: "Thursday", workoutType: "Run", title: "Wall Visit / Shakeout", description: "Acclimatization. 2-3 miles very easy, preferably near the wall.", distanceMiles: 3, durationMinutes: 30 },
-                        { dayName: "Friday", workoutType: "Rest", title: "Rest & Gear Check", description: "Organize race kit. Pin bib number." },
-                        { dayName: "Saturday", workoutType: "Rest", title: "Rest", description: "Carb load. Early dinner. Sleep." },
-                        { dayName: "Sunday", workoutType: "Long Run", title: "RACE DAY", description: "THE GREAT WALL MARATHON. Good luck!", distanceMiles: 26.2, stairsFocus: true }
+                        { dayName: "Monday", workoutType: "Rest", title: "Depart for China", description: "Travel Day. Stay hydrated on flight. Move legs periodically. Compression socks help." },
+                        { dayName: "Tuesday", workoutType: "Rest", title: "In Transit / Arrival", description: "Travel Day / Arrive in China. Light walking to shake out legs." },
+                        { dayName: "Wednesday", workoutType: "Run", title: "Shakeout Run", description: "2-3 miles very easy near the wall if possible. Get a feel for terrain.", distanceMiles: 2 },
+                        { dayName: "Thursday", workoutType: "Rest", title: "Rest & Expo", description: "Pick up bib. Organize race kit. Pin number. Lay out everything." },
+                        { dayName: "Friday", workoutType: "Run", title: "Final Shakeout", description: "2 miles very easy. Last run before race.", distanceMiles: 2 },
+                        { dayName: "Saturday", workoutType: "Rest", title: "Pre-Race Rest", description: "Complete rest. Carb load. Early dinner. Early to bed. Hydrate!" },
+                        { dayName: "Sunday", workoutType: "Long Run", title: "🏃 RACE DAY 🏃", description: "THE GREAT WALL MARATHON! You've trained for this. Trust your preparation. GOOD LUCK!", distanceMiles: 26.2, stairsFocus: true }
                     ]
                 }
             ]
@@ -1146,10 +1151,10 @@
 
         // Initialize
         const raceDate = new Date(RACE_DATE_STR);
-        // Plan starts on December 8, 2025 for a gentle entry
-        // Parse date explicitly to avoid timezone issues: "2025-12-08" -> Dec 8, 2025 at local midnight
+        // Plan starts on December 22, 2025 (today) following Hal Higdon Novice 2 cadence
+        // Parse date explicitly to avoid timezone issues: "2025-12-22" -> Dec 22, 2025 at local midnight
         function getEffectivePlanStartDate() {
-            const [year, month, day] = "2025-12-08".split('-').map(Number);
+            const [year, month, day] = "2025-12-22".split('-').map(Number);
             const standardPlanStartDate = new Date(year, month - 1, day); // month is 0-indexed
             const effective = new Date(standardPlanStartDate);
             effective.setDate(effective.getDate() + (weekOffset * 7));
