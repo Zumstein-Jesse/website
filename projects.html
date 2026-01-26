@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projects | Jesse Zumstein</title>
+    <!-- Rive Runtime -->
+    <script src="https://unpkg.com/@rive-app/canvas@latest"></script>
     <style>
         * {
             margin: 0;
@@ -367,6 +369,42 @@
             z-index: 1;
         }
 
+        /* Rive Prototype Styles */
+        .rive-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 600px;
+            display: flex;
+            align-items: stretch;
+            justify-content: stretch;
+            background: transparent;
+        }
+
+        #rive-canvas {
+            width: 100%;
+            height: 100%;
+            min-height: 600px;
+            cursor: pointer;
+        }
+
+        .rive-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #667eea;
+            font-size: 1.2em;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        .rive-error {
+            color: #ff6b6b;
+            text-align: center;
+            padding: 20px;
+        }
+
         @media (max-width: 968px) {
             .project-large,
             .project-large:nth-child(even) {
@@ -383,6 +421,14 @@
 
             h1 {
                 font-size: 2.5em;
+            }
+
+            .rive-container {
+                min-height: 500px;
+            }
+
+            #rive-canvas {
+                min-height: 500px;
             }
         }
     </style>
@@ -409,7 +455,40 @@
     </section>
 
     <section class="projects-content">
+        <canvas id="projectsCanvas"></canvas>
         <div class="project-showcase">
+            <!-- Rive Prototype Section -->
+            <div class="project-large">
+                <div class="project-image">
+                    <div class="rive-container">
+                        <div class="rive-loading" id="rive-loading">Loading prototype...</div>
+                        <canvas id="rive-canvas"></canvas>
+                    </div>
+                </div>
+                <div class="project-details">
+                    <div class="project-category">Interactive Prototype</div>
+                    <h2>Duo Prototype</h2>
+                    <p class="project-role">Interactive Animation & State Machine Design</p>
+                    <p class="project-description">An interactive prototype built with Rive, featuring state machine-driven animations. Hover and click on the canvas to explore the different states and transitions. This demonstrates real-time interactive graphics that respond to user input.</p>
+                    <div class="project-tech">
+                        <span class="tech-tag">Rive</span>
+                        <span class="tech-tag">State Machines</span>
+                        <span class="tech-tag">Interactive Animation</span>
+                        <span class="tech-tag">Web Integration</span>
+                    </div>
+                    <div class="project-stats">
+                        <div class="stat-box">
+                            <div class="stat-label">Technology</div>
+                            <div class="stat-value">Rive</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-label">Type</div>
+                            <div class="stat-value">Interactive</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="project-large">
                 <div class="project-image">
                     <img src="images/HL_web.jpg" alt="Hogwarts Legacy">
@@ -834,6 +913,384 @@
             updateCanvasSize();
             initGrid();
         });
+
+        // Rive Animation - Proper State Machine Integration
+        let riveInstance = null;
+        let stateMachineInputs = {};
+        let viewModelInstance = null;
+        let viewModelProperties = {};
+
+        function initRive() {
+            const canvas = document.getElementById('rive-canvas');
+            const loadingEl = document.getElementById('rive-loading');
+            
+            if (!canvas) return;
+
+            const container = canvas.parentElement;
+            canvas.width = container.offsetWidth || 500;
+            canvas.height = container.offsetHeight || 400;
+
+            riveInstance = new rive.Rive({
+                src: 'images/duo_prototype.riv',
+                canvas: canvas,
+                artboard: 'Main',
+                autoplay: false,
+                // DON'T specify stateMachines here - we'll add it manually after setting inputs
+                fit: rive.Fit.Cover,
+                alignment: rive.Alignment.Center,
+                automaticallyHandleEvents: true,
+                shouldDisableRiveListeners: false,
+                onLoad: () => {
+                    if (loadingEl) loadingEl.style.display = 'none';
+                    riveInstance.resizeDrawingSurfaceToCanvas();
+                    
+                    console.log('=== RIVE LOADED ===');
+                    console.log('Artboard:', riveInstance.artboardName);
+                    console.log('State Machines available:', riveInstance.stateMachineNames);
+                    console.log('Animations:', riveInstance.animationNames);
+                    
+                    // Bind ViewModel first
+                    bindViewModel();
+                    
+                    // Get the initial planIndex value
+                    const vmPlanIndex = getViewModelNumber('planIndex') ?? 0;
+                    console.log('Initial planIndex from ViewModel:', vmPlanIndex);
+                    
+                    // Now manually instantiate the state machine
+                    // This allows us to set inputs before it starts evaluating
+                    requestAnimationFrame(() => {
+                        // Play the state machine - this instantiates it
+                        riveInstance.play('SM_Background');
+                        
+                        // Immediately get and set the input
+                        const inputs = riveInstance.stateMachineInputs('SM_Background');
+                        if (inputs) {
+                            inputs.forEach(input => {
+                                stateMachineInputs[input.name] = input;
+                                console.log(`State Machine Input: ${input.name} (type: ${getInputTypeName(input.type)}, value: ${input.value})`);
+                                
+                                // Set localPlanIndex to match ViewModel
+                                if (input.name === 'localPlanIndex') {
+                                    input.value = vmPlanIndex;
+                                    lastSyncedPlanIndex = vmPlanIndex;
+                                    console.log(`Set localPlanIndex to ${vmPlanIndex}`);
+                                }
+                            });
+                        }
+                        
+                        console.log('Playing state machines:', riveInstance.playingStateMachineNames);
+                        
+                        // Start polling to sync ViewModel changes
+                        startPlanIndexSync();
+                    });
+                },
+                onLoadError: (err) => {
+                    console.error('Rive load error:', err);
+                    if (loadingEl) {
+                        loadingEl.textContent = 'Failed to load prototype';
+                        loadingEl.classList.add('rive-error');
+                    }
+                },
+                onStateChange: (event) => {
+                    // This fires when the state machine transitions between states
+                    console.log('State Machine Transition:', event.data);
+                },
+                onRiveEvent: (event) => {
+                    // This fires for Rive Events defined in the editor
+                    console.log('Rive Event:', event);
+                }
+            });
+        }
+        
+        // Get human-readable input type name
+        function getInputTypeName(type) {
+            switch(type) {
+                case rive.StateMachineInputType.Boolean: return 'Boolean';
+                case rive.StateMachineInputType.Number: return 'Number';
+                case rive.StateMachineInputType.Trigger: return 'Trigger';
+                default: return 'Unknown';
+            }
+        }
+        
+        // Bind ViewModel for data-driven animations
+        function bindViewModel() {
+            try {
+                const artboard = riveInstance.artboard;
+                
+                // Method 1: Try to get the artboard's DEFAULT ViewModel instance
+                // This is the instance already configured in the Rive editor
+                if (artboard && typeof artboard.defaultViewModelInstance === 'function') {
+                    viewModelInstance = artboard.defaultViewModelInstance();
+                    if (viewModelInstance) {
+                        console.log('Using artboard default ViewModel instance');
+                        cacheViewModelProperties();
+                        return;
+                    }
+                }
+                
+                // Method 2: Try viewModelInstance property directly
+                if (artboard && artboard.viewModelInstance) {
+                    viewModelInstance = artboard.viewModelInstance;
+                    console.log('Using artboard.viewModelInstance');
+                    cacheViewModelProperties();
+                    return;
+                }
+                
+                // Method 3: Fall back to manual binding from riveFile
+                const rf = riveInstance.riveFile;
+                if (!rf || !rf.file) {
+                    console.log('No riveFile available for ViewModel binding');
+                    return;
+                }
+                
+                // Try to find and bind StatsVM
+                const viewModel = rf.file.viewModelByName('StatsVM');
+                if (!viewModel) {
+                    console.log('ViewModel "StatsVM" not found');
+                    return;
+                }
+                
+                console.log('ViewModel instanceCount:', viewModel.instanceCount);
+                
+                // Try to get or create an instance
+                if (viewModel.instanceCount > 0) {
+                    viewModelInstance = viewModel.instanceByIndex(0);
+                } else if (typeof viewModel.defaultInstance === 'function') {
+                    viewModelInstance = viewModel.defaultInstance();
+                } else if (typeof viewModel.createDefaultInstance === 'function') {
+                    viewModelInstance = viewModel.createDefaultInstance();
+                }
+                
+                if (!viewModelInstance) {
+                    console.log('Could not get ViewModel instance');
+                    return;
+                }
+                
+                // Bind the ViewModel instance to the artboard
+                if (artboard && typeof artboard.bindViewModelInstance === 'function') {
+                    // Get the native/runtime instance for binding
+                    const nativeInstance = viewModelInstance.nativeInstance || 
+                                          viewModelInstance.runtimeInstance || 
+                                          viewModelInstance;
+                    artboard.bindViewModelInstance(nativeInstance);
+                    console.log('ViewModel "StatsVM" manually bound to artboard');
+                }
+                
+                // Cache references to ViewModel properties for observation
+                cacheViewModelProperties();
+                
+            } catch (e) {
+                console.log('ViewModel binding error:', e.message);
+                console.error(e);
+            }
+        }
+        
+        // Cache ViewModel property references
+        function cacheViewModelProperties() {
+            if (!viewModelInstance) return;
+            
+            try {
+                // Cache number properties
+                if (typeof viewModelInstance.number === 'function') {
+                    const planIndex = viewModelInstance.number('planIndex');
+                    if (planIndex) {
+                        viewModelProperties.planIndex = planIndex;
+                        console.log('ViewModel property "planIndex":', planIndex.value);
+                    }
+                }
+                
+                // Cache boolean properties (hover states, etc.)
+                if (typeof viewModelInstance.boolean === 'function') {
+                    ['maxHover', 'superHover', 'basicHover'].forEach(name => {
+                        const prop = viewModelInstance.boolean(name);
+                        if (prop) {
+                            viewModelProperties[name] = prop;
+                            console.log(`ViewModel property "${name}":`, prop.value);
+                        }
+                    });
+                }
+            } catch (e) {
+                console.log('ViewModel property caching note:', e.message);
+            }
+        }
+
+        // === STATE MACHINE INPUT HELPERS ===
+        // Use these to interact with the state machine properly
+        
+        // Set a boolean input value
+        function setBooleanInput(inputName, value) {
+            const input = stateMachineInputs[inputName];
+            if (input && input.type === rive.StateMachineInputType.Boolean) {
+                input.value = value;
+                console.log(`Set boolean "${inputName}" to ${value}`);
+            } else {
+                console.warn(`Boolean input "${inputName}" not found`);
+            }
+        }
+
+        // Fire a trigger input
+        function fireTrigger(inputName) {
+            const input = stateMachineInputs[inputName];
+            if (input && input.type === rive.StateMachineInputType.Trigger) {
+                input.fire();
+                console.log(`Fired trigger "${inputName}"`);
+            } else {
+                console.warn(`Trigger input "${inputName}" not found`);
+            }
+        }
+
+        // Set a number input value
+        function setNumberInput(inputName, value) {
+            const input = stateMachineInputs[inputName];
+            if (input && input.type === rive.StateMachineInputType.Number) {
+                input.value = value;
+                console.log(`Set number "${inputName}" to ${value}`);
+            } else {
+                console.warn(`Number input "${inputName}" not found`);
+            }
+        }
+        
+        // Get current value of an input
+        function getInputValue(inputName) {
+            const input = stateMachineInputs[inputName];
+            if (input) {
+                return input.value;
+            }
+            return undefined;
+        }
+        
+        // === VIEWMODEL PROPERTY HELPERS ===
+        // Use these to read/write ViewModel data
+        
+        function getViewModelNumber(propName) {
+            const prop = viewModelProperties[propName];
+            return prop ? prop.value : undefined;
+        }
+        
+        function setViewModelNumber(propName, value) {
+            const prop = viewModelProperties[propName];
+            if (prop) {
+                prop.value = value;
+                console.log(`Set ViewModel "${propName}" to ${value}`);
+                
+                // Auto-sync planIndex to localPlanIndex for SM_Background
+                // Use debounced sync to prevent rapid-fire state machine updates
+                if (propName === 'planIndex') {
+                    if (syncDebounceTimer) clearTimeout(syncDebounceTimer);
+                    syncDebounceTimer = setTimeout(() => {
+                        syncLocalPlanIndex(true); // force sync
+                    }, 50);
+                }
+            }
+        }
+        
+        // === PLANINDEX SYNC FOR SM_BACKGROUND ===
+        // Syncs ViewModel's planIndex to SM_Background's localPlanIndex input
+        
+        let lastSyncedPlanIndex = null;
+        let planIndexSyncInterval = null;
+        let syncDebounceTimer = null;
+        let isSyncing = false;
+        
+        function syncLocalPlanIndex(force = false) {
+            // Prevent re-entry during sync
+            if (isSyncing && !force) return;
+            
+            const vmPlanIndex = getViewModelNumber('planIndex');
+            const localInput = stateMachineInputs['localPlanIndex'];
+            
+            if (!localInput || vmPlanIndex === undefined) return;
+            
+            // Only sync if the actual input value is different from what we want
+            const currentInputValue = localInput.value;
+            
+            if (currentInputValue !== vmPlanIndex) {
+                isSyncing = true;
+                localInput.value = vmPlanIndex;
+                lastSyncedPlanIndex = vmPlanIndex;
+                console.log(`Synced localPlanIndex: ${currentInputValue} → ${vmPlanIndex}`);
+                
+                // Prevent rapid re-sync for 500ms after a sync
+                setTimeout(() => {
+                    isSyncing = false;
+                }, 500);
+            } else {
+                // Values match, just update tracking
+                lastSyncedPlanIndex = vmPlanIndex;
+            }
+        }
+        
+        function startPlanIndexSync() {
+            // Poll every 250ms to catch ViewModel changes from Rive listeners
+            // Using longer interval to reduce performance impact and prevent loops
+            if (planIndexSyncInterval) {
+                clearInterval(planIndexSyncInterval);
+            }
+            
+            planIndexSyncInterval = setInterval(() => {
+                syncLocalPlanIndex();
+            }, 250);
+            
+            console.log('Started planIndex sync polling (250ms)');
+        }
+        
+        function stopPlanIndexSync() {
+            if (planIndexSyncInterval) {
+                clearInterval(planIndexSyncInterval);
+                planIndexSyncInterval = null;
+                console.log('Stopped planIndex sync polling');
+            }
+        }
+        
+        function getViewModelBoolean(propName) {
+            const prop = viewModelProperties[propName];
+            return prop ? prop.value : undefined;
+        }
+        
+        function setViewModelBoolean(propName, value) {
+            const prop = viewModelProperties[propName];
+            if (prop) {
+                prop.value = value;
+                console.log(`Set ViewModel "${propName}" to ${value}`);
+            }
+        }
+
+        // Handle window resize for Rive canvas
+        window.addEventListener('resize', () => {
+            if (riveInstance) {
+                const canvas = document.getElementById('rive-canvas');
+                const container = canvas.parentElement;
+                canvas.width = container.offsetWidth;
+                canvas.height = container.offsetHeight;
+                riveInstance.resizeDrawingSurfaceToCanvas();
+            }
+        });
+        
+        // Expose helpers globally for debugging in console
+        window.riveHelpers = {
+            setBooleanInput,
+            fireTrigger,
+            setNumberInput,
+            getInputValue,
+            getViewModelNumber,
+            setViewModelNumber,
+            getViewModelBoolean,
+            setViewModelBoolean,
+            syncLocalPlanIndex,
+            startPlanIndexSync,
+            stopPlanIndexSync,
+            getInstance: () => riveInstance,
+            getInputs: () => stateMachineInputs,
+            getViewModel: () => viewModelInstance,
+            getViewModelProps: () => viewModelProperties
+        };
+
+        // Initialize Rive when the page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initRive);
+        } else {
+            initRive();
+        }
     </script>
 </body>
 </html>
